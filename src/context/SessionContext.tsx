@@ -44,7 +44,7 @@ export const SessionProvider = ({ children }: { children: ReactNode }) => {
                 }, 8000);
 
                 try {
-                    const onlineHistory = await userService.getQuizHistory(user.uid);
+                    const onlineHistory = await userService.getPracticaHistory(user.uid);
                     setHistory(onlineHistory);
                 } catch (error) {
                     console.error('Failed to load history:', error);
@@ -77,7 +77,7 @@ export const SessionProvider = ({ children }: { children: ReactNode }) => {
         // Save to Firebase if user is logged in
         if (user) {
             try {
-                await userService.saveQuizResult(user.uid, result);
+                await userService.savePracticaResult(user.uid, result);
             } catch (error) {
                 console.error('Failed to save result to Firebase:', error);
             }

@@ -29,7 +29,7 @@ export default function SummaryScreen({ route, navigation }: Props) {
                     <Text style={styles.iconEmoji}>{percentage >= 80 ? '🎉' : percentage >= 50 ? '👏' : '✍️'}</Text>
                 </View>
 
-                <Text style={styles.title}>¡Ejercicio Completo!</Text>
+                <Text style={styles.title}>¡Práctica Completada!</Text>
 
                 <View style={styles.scoreCard}>
                     <Text style={styles.scoreLabel}>Tu Puntuación</Text>

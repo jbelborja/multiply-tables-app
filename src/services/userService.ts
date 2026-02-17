@@ -13,9 +13,9 @@ import { PracticaResult } from '../context/SessionContext';
 
 export const userService = {
     /**
-     * Saves a quiz result to Firestore
+     * Saves a practica result to Firestore
      */
-    async saveQuizResult(userId: string, result: Omit<PracticaResult, 'id' | 'date'>) {
+    async savePracticaResult(userId: string, result: Omit<PracticaResult, 'id' | 'date'>) {
         try {
             const resultsRef = collection(db, 'users', userId, 'results');
             await addDoc(resultsRef, {
@@ -32,7 +32,7 @@ export const userService = {
     /**
      * Fetches the quiz history for a user
      */
-    async getQuizHistory(userId: string): Promise<PracticaResult[]> {
+    async getPracticaHistory(userId: string): Promise<PracticaResult[]> {
         try {
             const resultsRef = collection(db, 'users', userId, 'results');
             const q = query(resultsRef, orderBy('date', 'desc'), limit(50));

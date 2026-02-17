@@ -2,14 +2,14 @@ import React, { useState, useEffect } from 'react';
 import { View, Text, TextInput, StyleSheet, TouchableOpacity, KeyboardAvoidingView, Platform, ScrollView } from 'react-native';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { RootStackParamList } from '../navigation/types';
-import { PracticaEngine, Question } from '../utils/QuizEngine';
+import { PracticaEngine, Question } from '../utils/PracticaEngine';
 import { theme } from '../styles/theme';
 
 type Props = NativeStackScreenProps<RootStackParamList, 'Practica'>;
 
 const TOTAL_QUESTIONS = 10;
 
-export default function QuizScreen({ navigation, route }: Props) {
+export default function PracticaScreen({ navigation, route }: Props) {
     const { mode, tables } = route.params;
     const [engine] = useState(() => new PracticaEngine());
     const [currentQuestion, setCurrentQuestion] = useState<Question | null>(null);

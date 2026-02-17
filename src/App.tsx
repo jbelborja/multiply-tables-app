@@ -5,7 +5,7 @@ import { RootStackParamList } from './navigation/types';
 import { ActivityIndicator, View, Text } from 'react-native';
 
 import HomeScreen from './screens/HomeScreen';
-import QuizScreen from './screens/QuizScreen';
+import PracticaScreen from './screens/PracticaScreen';
 import SummaryScreen from './screens/SummaryScreen';
 import LoginScreen from './screens/LoginScreen';
 import ProfileScreen from './screens/ProfileScreen';
@@ -126,7 +126,7 @@ function AppNavigator() {
             />
             <Stack.Screen
               name="Practica"
-              component={QuizScreen}
+              component={PracticaScreen}
               options={{ title: 'Práctica de Tablas' }}
             />
             <Stack.Screen
