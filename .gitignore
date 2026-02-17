@@ -1,1 +1,32 @@
-node_modules
+# Node.js
+node_modules/
+dist/
+dist-native/
+*.log
+
+# Rust / Tauri
+src-tauri/target/
+src-tauri/gen/
+src-tauri/Cargo.lock
+
+# Android / Mobile
+*.jks
+*.p8
+*.p12
+*.keystore
+keystore_base64.txt
+tauri.properties
+
+# Environment Variables
+.env
+.env.*
+
+# OS Files
+.DS_Store
+Thumbs.db
+
+# IDEs
+.vscode/
+.idea/
+*.swp
+*.swo
