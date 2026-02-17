@@ -1,0 +1,93 @@
+name: Build Android APK (Tauri v2)
+
+on:
+  workflow_dispatch:
+
+jobs:
+  build-android:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: setup node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'npm'
+
+      - name: setup java
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'zulu'
+          java-version: '21'
+
+      - name: setup android sdk
+        id: setup-android
+        uses: android-actions/setup-android@v3
+
+      - name: install rust
+        uses: dtolnay/rust-toolchain@stable
+        with:
+          targets: aarch64-linux-android, armv7-linux-androideabi, i686-linux-android, x86_64-linux-android
+
+      - name: install dependencies
+        run: npm install --legacy-peer-deps
+
+      - name: create google-services.json
+        env:
+          GOOGLE_SERVICES_JSON: ${{ secrets.GOOGLE_SERVICES_JSON }}
+        run: echo "$GOOGLE_SERVICES_JSON" > google-services.json
+
+      - name: build frontend
+        run: npm run build
+
+      - name: initialize tauri android
+        # Only run init if the manifest doesn't exist
+        run: |
+          if [ ! -f "src-tauri/gen/android/app/src/main/AndroidManifest.xml" ]; then
+            npx tauri android init --ci
+          fi
+
+      - name: build android release
+        run: npx tauri android build --apk
+        env:
+          NDK_HOME: ${{ steps.setup-android.outputs.ndk-path }}
+
+      - name: decode keystore
+        id: decode_keystore
+        uses: timheuer/base64-to-file@v1.2
+        with:
+          fileName: 'release-key.jks'
+          encodedString: ${{ secrets.ANDROID_KEYSTORE_BASE64 }}
+
+      - name: sign apk
+        env:
+          KEYSTORE_PASSWORD: ${{ secrets.ANDROID_KEYSTORE_PASSWORD }}
+          KEY_PASSWORD: ${{ secrets.ANDROID_KEY_PASSWORD }}
+          KEY_ALIAS: ${{ secrets.ANDROID_KEY_ALIAS }}
+        run: |
+          APK_PATH=$(find src-tauri/gen/android/app/build/outputs/apk -name "*.apk" | head -1)
+          if [ -z "$APK_PATH" ]; then
+            echo "::error::No APK found to sign!"
+            exit 1
+          fi
+          echo "Found APK at: $APK_PATH"
+          
+          # Use apksigner from the Android SDK
+          APKSIGNER_PATH=$(find $ANDROID_HOME/build-tools -name apksigner | sort -r | head -1)
+          
+          # Ensure the output directory exists
+          mkdir -p src-tauri/gen/android/app/build/outputs/apk/release
+          
+          "$APKSIGNER_PATH" sign --ks ${{ steps.decode_keystore.outputs.filePath }} \
+            --ks-pass pass:$KEYSTORE_PASSWORD \
+            --ks-key-alias $KEY_ALIAS \
+            --key-pass pass:$KEY_PASSWORD \
+            --out src-tauri/gen/android/app/build/outputs/apk/release/app-signed.apk \
+            "$APK_PATH"
+
+      - name: upload apk
+        uses: actions/upload-artifact@v4
+        with:
+          name: app-release
+          path: src-tauri/gen/android/app/build/outputs/apk/release/app-signed.apk

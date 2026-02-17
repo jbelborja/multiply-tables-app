@@ -1,0 +1,128 @@
+name: Build Desktop App
+
+on:
+  workflow_dispatch:
+    inputs:
+      build_windows:
+        description: 'Construir para Windows'
+        required: true
+        type: boolean
+        default: true
+      build_macos:
+        description: 'Construir para macOS'
+        required: true
+        type: boolean
+        default: true
+      build_linux:
+        description: 'Construir para Linux'
+        required: true
+        type: boolean
+        default: true
+
+jobs:
+  build:
+    name: Build for ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - platform: windows-latest
+            os: Windows
+            id: windows
+            enabled: ${{ github.event.inputs.build_windows == 'true' }}
+          - platform: macos-latest
+            os: macOS
+            id: macos
+            enabled: ${{ github.event.inputs.build_macos == 'true' }}
+          - platform: ubuntu-22.04
+            os: Linux
+            id: linux
+            enabled: ${{ github.event.inputs.build_linux == 'true' }}
+
+    runs-on: ${{ matrix.platform }}
+
+    steps:
+      - name: Checkout code
+        if: ${{ matrix.enabled }}
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        if: ${{ matrix.enabled }}
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Install dependencies
+        if: ${{ matrix.enabled }}
+        run: npm install --legacy-peer-deps
+
+      - name: Install Rust
+        if: ${{ matrix.enabled }}
+        uses: dtolnay/rust-toolchain@stable
+
+      - name: install dependencies (ubuntu only)
+        if: matrix.id == 'linux' && matrix.enabled
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y libgtk-3-dev libwebkit2gtk-4.1-dev libappindicator3-dev librsvg2-dev patchelf libsoup-3.0-dev libjavascriptcoregtk-4.1-dev libssl-dev pkg-config libdbus-1-dev
+
+      - name: Build Web App
+        if: ${{ matrix.enabled }}
+        run: |
+          npm run build
+          echo "Listing web build output (dist):"
+        shell: bash
+      
+      - name: List dist directory
+        if: ${{ matrix.enabled }}
+        run: |
+          if (Test-Path dist) { Get-ChildItem dist } else { Write-Host "dist directory not found" }
+        shell: pwsh
+        continue-on-error: true
+
+      - name: Build Desktop App
+        if: ${{ matrix.enabled }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          TAURI_SIGNING_PRIVATE_KEY: ""
+        run: |
+          # Use npx to run tauri build directly
+          # We skip the beforeBuildCommand in tauri.conf.json by running it manually above
+          npx --yes @tauri-apps/cli build --verbose
+
+      - name: Debug - Locate Binaries
+        if: ${{ matrix.enabled }}
+        run: |
+          echo "--- Binary Location Debug ---"
+          echo "Current directory: $(pwd)"
+          
+          echo "Listing src-tauri/target:"
+          if [ -d "src-tauri/target" ]; then ls -la src-tauri/target; else echo "target not found"; fi
+          
+          echo "Searching for all binaries (AppImage, deb, dmg, exe, msi):"
+          find src-tauri/target -name "*.AppImage" -o -name "*.deb" -o -name "*.dmg" -o -name "*.exe" -o -name "*.msi" -o -name "*.app" 2>/dev/null || echo "No binaries found"
+          echo "--- End Debug ---"
+        shell: bash
+
+      - name: Upload Artifacts
+        if: ${{ matrix.enabled }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: multitable-hero-${{ matrix.id }}
+          path: |
+            src-tauri/target/release/bundle/**/*.deb
+            src-tauri/target/release/bundle/**/*.AppImage
+            src-tauri/target/release/bundle/**/*.appimage
+            src-tauri/target/release/bundle/**/*.dmg
+            src-tauri/target/release/bundle/**/*.exe
+            src-tauri/target/release/bundle/**/*.msi
+            src-tauri/target/release/bundle/**/*.app
+            src-tauri/target/release/bundle/**/*.pkg
+            src-tauri/target/release/bundle/**/*.tar.gz
+            src-tauri/target/release/*.deb
+            src-tauri/target/release/*.AppImage
+            src-tauri/target/release/*.dmg
+            src-tauri/target/release/*.exe
+            src-tauri/target/release/*.msi
+            src-tauri/target/release/*.app
