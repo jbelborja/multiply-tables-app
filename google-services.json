@@ -1,0 +1,39 @@
+{
+    "project_info": {
+        "project_number": "364645965860",
+        "project_id": "english-verbs-app",
+        "storage_bucket": "english-verbs-app.firebasestorage.app"
+    },
+    "client": [
+        {
+            "client_info": {
+                "mobilesdk_app_id": "1:364645965860:android:4e87542eac6c1c1a4f78b1",
+                "android_client_info": {
+                    "package_name": "com.jbelborja.englishverbsapp"
+                }
+            },
+            "oauth_client": [
+                {
+                    "client_id": "364645965860-sjietr9u3dcdvt8ieecekga0jp7ul37g.apps.googleusercontent.com",
+                    "client_type": 3
+                }
+            ],
+            "api_key": [
+                {
+                    "current_key": "AIzaSyCaocBqME-_8qRys1L8S2tUuhdUKLM9iGY"
+                }
+            ],
+            "services": {
+                "appinvite_service": {
+                    "other_platform_oauth_client": [
+                        {
+                            "client_id": "364645965860-sjietr9u3dcdvt8ieecekga0jp7ul37g.apps.googleusercontent.com",
+                            "client_type": 3
+                        }
+                    ]
+                }
+            }
+        }
+    ],
+    "configuration_version": "1"
+}

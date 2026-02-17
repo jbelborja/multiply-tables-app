@@ -1,0 +1,11 @@
+import React from 'react';
+export const enableScreens = () => {};
+export const screensEnabled = () => false;
+export const ScreenContainer = ({ children }) => <>{children}</>;
+export const Screen = ({ children }) => <>{children}</>;
+export const NativeScreen = ({ children }) => <>{children}</>;
+export const NativeScreenContainer = ({ children }) => <>{children}</>;
+export const ScreenStack = ({ children }) => <>{children}</>;
+export const ScreenStackHeaderConfig = ({ children }) => <>{children}</>;
+export const ScreenStackHeaderSubsection = ({ children }) => <>{children}</>;
+export default { enableScreens, screensEnabled, ScreenContainer, Screen, NativeScreen, NativeScreenContainer, ScreenStack, ScreenStackHeaderConfig, ScreenStackHeaderSubsection };
