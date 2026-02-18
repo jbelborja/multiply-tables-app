@@ -1,39 +1,47 @@
 {
-    "project_info": {
-        "project_number": "364645965860",
-        "project_id": "english-verbs-app",
-        "storage_bucket": "english-verbs-app.firebasestorage.app"
-    },
-    "client": [
-        {
-            "client_info": {
-                "mobilesdk_app_id": "1:364645965860:android:4e87542eac6c1c1a4f78b1",
-                "android_client_info": {
-                    "package_name": "com.jbelborja.englishverbsapp"
-                }
-            },
-            "oauth_client": [
-                {
-                    "client_id": "364645965860-sjietr9u3dcdvt8ieecekga0jp7ul37g.apps.googleusercontent.com",
-                    "client_type": 3
-                }
-            ],
-            "api_key": [
-                {
-                    "current_key": "AIzaSyCaocBqME-_8qRys1L8S2tUuhdUKLM9iGY"
-                }
-            ],
-            "services": {
-                "appinvite_service": {
-                    "other_platform_oauth_client": [
-                        {
-                            "client_id": "364645965860-sjietr9u3dcdvt8ieecekga0jp7ul37g.apps.googleusercontent.com",
-                            "client_type": 3
-                        }
-                    ]
-                }
-            }
+  "project_info": {
+    "project_number": "215785578868",
+    "project_id": "multitable-hero",
+    "storage_bucket": "multitable-hero.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:215785578868:android:c149a4c9ebfcfb9f5d0c21",
+        "android_client_info": {
+          "package_name": "com.jbelborja.multitablehero"
         }
-    ],
-    "configuration_version": "1"
+      },
+      "oauth_client": [
+        {
+          "client_id": "215785578868-sdvrde2471r1s0f8ukqa7ei1mioqa7sm.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.jbelborja.multitablehero",
+            "certificate_hash": "1582a7c7ad504a329e7453d1863fd078b42cd88d"
+          }
+        },
+        {
+          "client_id": "215785578868-lo5maj3fm5a1le9m7qhmpcpbdd54j4sa.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCXdFXpJImHT3-mNwLmFXoEkp5_FTe_oRY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "215785578868-lo5maj3fm5a1le9m7qhmpcpbdd54j4sa.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
 }
