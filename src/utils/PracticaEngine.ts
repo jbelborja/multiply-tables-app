@@ -24,9 +24,9 @@ export class PracticaEngine {
     generateUniqueQuestions(tables: number[], count: number): Question[] {
         const allPossible: Question[] = [];
 
-        // Generate all possible operations for the selected tables (1 to 9)
+        // Generate all possible operations for the selected tables (0 to 10)
         for (const a of tables) {
-            for (let b = 1; b <= 9; b++) {
+            for (let b = 0; b <= 10; b++) {
                 allPossible.push({
                     a,
                     b,
