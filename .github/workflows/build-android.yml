@@ -80,11 +80,11 @@ jobs:
             --ks-pass pass:$KEYSTORE_PASSWORD \
             --ks-key-alias $KEY_ALIAS \
             --key-pass pass:$KEY_PASSWORD \
-            --out src-tauri/gen/android/app/build/outputs/apk/release/app-signed.apk \
+            --out src-tauri/gen/android/app/build/outputs/apk/release/MultiTableHero-signed.apk \
             "$APK_PATH"
 
       - name: upload apk
         uses: actions/upload-artifact@v4
         with:
-          name: app-release
-          path: src-tauri/gen/android/app/build/outputs/apk/release/app-signed.apk
+          name: MultiTableHero-Android-APK
+          path: src-tauri/gen/android/app/build/outputs/apk/release/MultiTableHero-signed.apk

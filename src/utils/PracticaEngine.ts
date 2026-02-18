@@ -20,6 +20,29 @@ export class PracticaEngine {
         };
     }
 
+    // Generate a set of unique questions
+    generateUniqueQuestions(tables: number[], count: number): Question[] {
+        const allPossible: Question[] = [];
+
+        // Generate all possible operations for the selected tables (1 to 9)
+        for (const a of tables) {
+            for (let b = 1; b <= 9; b++) {
+                allPossible.push({
+                    a,
+                    b,
+                    correctAnswer: a * b,
+                    prompt: `${a} x ${b}`,
+                });
+            }
+        }
+
+        // Shuffle the list
+        const shuffled = allPossible.sort(() => Math.random() - 0.5);
+
+        // Return the requested count (or all if count > available)
+        return shuffled.slice(0, count);
+    }
+
     // Generate options for choice mode
     generateOptions(currentQuestion: Question, count: number = 4): number[] {
         const correct = currentQuestion.correctAnswer;

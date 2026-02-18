@@ -12,6 +12,7 @@ const TOTAL_QUESTIONS = 10;
 export default function PracticaScreen({ navigation, route }: Props) {
     const { mode, tables } = route.params;
     const [engine] = useState(() => new PracticaEngine());
+    const [questions, setQuestions] = useState<Question[]>([]);
     const [currentQuestion, setCurrentQuestion] = useState<Question | null>(null);
     const [options, setOptions] = useState<number[]>([]);
 
@@ -21,13 +22,13 @@ export default function PracticaScreen({ navigation, route }: Props) {
     const [status, setStatus] = useState<'answering' | 'correct' | 'incorrect'>('answering');
     const [feedback, setFeedback] = useState('');
 
-    const loadNextQuestion = () => {
-        if (questionCount >= TOTAL_QUESTIONS) {
+    const loadNextQuestion = (nextIndex: number, currentQuestions: Question[]) => {
+        if (nextIndex >= TOTAL_QUESTIONS || nextIndex >= currentQuestions.length) {
             navigation.replace('Summary', { score, total: TOTAL_QUESTIONS, mode, tables });
             return;
         }
 
-        const q = engine.generateQuestion(tables);
+        const q = currentQuestions[nextIndex];
         setCurrentQuestion(q);
 
         if (mode === 'choice') {
@@ -39,11 +40,15 @@ export default function PracticaScreen({ navigation, route }: Props) {
 
         setStatus('answering');
         setFeedback('');
-        setQuestionCount(prev => prev + 1);
+        setQuestionCount(nextIndex + 1);
     };
 
     useEffect(() => {
-        loadNextQuestion();
+        const generated = engine.generateUniqueQuestions(tables, TOTAL_QUESTIONS);
+        setQuestions(generated);
+        if (generated.length > 0) {
+            loadNextQuestion(0, generated);
+        }
     }, []);
 
     const submitAnswer = (choiceAnswer?: number | string) => {
@@ -63,7 +68,7 @@ export default function PracticaScreen({ navigation, route }: Props) {
     };
 
     const handleNext = () => {
-        loadNextQuestion();
+        loadNextQuestion(questionCount, questions);
     };
 
     if (!currentQuestion) return null;
