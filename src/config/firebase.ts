@@ -4,12 +4,12 @@ import { getFirestore } from 'firebase/firestore';
 
 // Firebase configuration for english-verbs-app
 const firebaseConfig = {
-    apiKey: "AIzaSyCaocBqME-_8qRys1L8S2tUuhdUKLM9iGY",
-    authDomain: "english-verbs-app.firebaseapp.com",
-    projectId: "english-verbs-app",
-    storageBucket: "english-verbs-app.firebasestorage.app",
-    messagingSenderId: "364645965860",
-    appId: "1:364645965860:web:c675335423acb4b64f78b1"
+  apiKey: "AIzaSyD7su_RoIbAjYZYRR2esR4_DT_7SlgLHdw",
+  authDomain: "multitable-hero.firebaseapp.com",
+  projectId: "multitable-hero",
+  storageBucket: "multitable-hero.firebasestorage.app",
+  messagingSenderId: "215785578868",
+  appId: "1:215785578868:web:39a3d7d286f2750d5d0c21"
 };
 
 // Initialize Firebase
