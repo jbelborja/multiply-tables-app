@@ -126,3 +126,4 @@ jobs:
             src-tauri/target/release/*.exe
             src-tauri/target/release/*.msi
             src-tauri/target/release/*.app
+          retention-days: 14

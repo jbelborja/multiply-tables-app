@@ -88,3 +88,4 @@ jobs:
         with:
           name: MultiTableHero-Android-APK
           path: src-tauri/gen/android/app/build/outputs/apk/release/MultiTableHero-signed.apk
+          retention-days: 14
