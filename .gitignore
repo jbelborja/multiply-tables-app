@@ -21,6 +21,12 @@ tauri.properties
 .env
 .env.*
 
+# Firebase credentials and local configuration
+google-services.json
+service-account*.json
+*-firebase-adminsdk-*.json
+.secrets/
+
 # OS Files
 .DS_Store
 Thumbs.db
