@@ -1,9 +1,10 @@
 import React, { useEffect } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
+import { View, Text, TouchableOpacity } from 'react-native';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { RootStackParamList } from '../navigation/types';
 import { useSession } from '../context/SessionContext';
 import { theme } from '../styles/theme';
+import tw from 'twrnc';
 
 type Props = NativeStackScreenProps<RootStackParamList, 'Summary'>;
 
@@ -55,76 +56,17 @@ export default function SummaryScreen({ route, navigation }: Props) {
     );
 }
 
-const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        backgroundColor: theme.colors.background,
-        padding: theme.spacing.xl,
-    },
-    content: {
-        flex: 1,
-        justifyContent: 'center',
-        alignItems: 'center',
-    },
-    iconCircle: {
-        width: 100,
-        height: 100,
-        borderRadius: 50,
-        backgroundColor: theme.colors.white,
-        justifyContent: 'center',
-        alignItems: 'center',
-        ...theme.shadows.md,
-        marginBottom: theme.spacing.lg,
-    },
-    iconEmoji: {
-        fontSize: 50,
-    },
-    title: {
-        ...theme.typography.h1,
-        color: theme.colors.text,
-        marginBottom: theme.spacing.xl,
-        textAlign: 'center',
-    },
-    scoreCard: {
-        backgroundColor: theme.colors.white,
-        padding: theme.spacing.xl,
-        borderRadius: theme.roundness.xl,
-        alignItems: 'center',
-        width: '100%',
-        ...theme.shadows.md,
-        marginBottom: theme.spacing.xl,
-    },
-    scoreLabel: {
-        ...theme.typography.body,
-        color: theme.colors.textSecondary,
-        marginBottom: theme.spacing.sm,
-    },
-    scoreValue: {
-        fontSize: 64,
-        fontWeight: '900',
-        marginBottom: theme.spacing.xs,
-    },
-    percentageText: {
-        ...theme.typography.h3,
-        color: theme.colors.textLight,
-    },
-    message: {
-        ...theme.typography.body,
-        color: theme.colors.textSecondary,
-        textAlign: 'center',
-        fontStyle: 'italic',
-        paddingHorizontal: 20,
-    },
-    button: {
-        backgroundColor: theme.colors.primary,
-        paddingVertical: 16,
-        borderRadius: theme.roundness.lg,
-        alignItems: 'center',
-        ...theme.shadows.sm,
-    },
-    buttonText: {
-        color: theme.colors.white,
-        fontSize: 18,
-        fontWeight: 'bold',
-    },
-});
+const styles = {
+    container: tw`flex-1 bg-[#f9fafb] p-8`,
+    content: tw`flex-1 items-center justify-center`,
+    iconCircle: tw`mb-6 h-[100px] w-[100px] items-center justify-center rounded-full bg-white shadow-md`,
+    iconEmoji: tw`text-[50px]`,
+    title: tw`mb-8 text-center text-[32px] font-extrabold text-[#111827]`,
+    scoreCard: tw`mb-8 w-full items-center rounded-2xl bg-white p-8 shadow-md`,
+    scoreLabel: tw`mb-2 text-base text-[#4b5563]`,
+    scoreValue: tw`mb-1 text-[64px] font-black`,
+    percentageText: tw`text-lg font-semibold text-[#9ca3af]`,
+    message: tw`px-5 text-center text-base italic text-[#4b5563]`,
+    button: tw`items-center rounded-xl bg-[#4f46e5] py-4 shadow-sm`,
+    buttonText: tw`text-lg font-bold text-white`,
+};

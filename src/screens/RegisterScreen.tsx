@@ -1,9 +1,10 @@
 import React, { useState } from 'react';
-import { StyleSheet, Text, View, TextInput, TouchableOpacity, ActivityIndicator, KeyboardAvoidingView, Platform, ScrollView } from 'react-native';
+import { Text, View, TextInput, TouchableOpacity, ActivityIndicator, KeyboardAvoidingView, Platform, ScrollView } from 'react-native';
 import { useAuth } from '../context/AuthContext';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { RootStackParamList } from '../navigation/types';
 import { theme } from '../styles/theme';
+import tw from 'twrnc';
 
 type Props = NativeStackScreenProps<RootStackParamList, 'Register'>;
 
@@ -120,80 +121,20 @@ export default function RegisterScreen({ navigation }: Props) {
     );
 }
 
-const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        backgroundColor: theme.colors.background,
-    },
-    scrollContent: {
-        padding: theme.spacing.xl,
-        justifyContent: 'center',
-        minHeight: '100%',
-    },
-    header: {
-        alignItems: 'center',
-        marginBottom: 40,
-    },
-    title: {
-        ...theme.typography.h1,
-        color: theme.colors.text,
-        marginBottom: 8,
-    },
-    subtitle: {
-        ...theme.typography.body,
-        color: theme.colors.textSecondary,
-    },
-    form: {
-        backgroundColor: theme.colors.white,
-        padding: theme.spacing.xl,
-        borderRadius: theme.roundness.xl,
-        ...theme.shadows.md,
-    },
-    errorText: {
-        color: theme.colors.error,
-        marginBottom: 15,
-        textAlign: 'center',
-        fontWeight: '600',
-    },
-    inputContainer: {
-        marginBottom: 20,
-    },
-    label: {
-        ...theme.typography.caption,
-        color: theme.colors.textSecondary,
-        marginBottom: 8,
-        fontWeight: '700',
-    },
-    input: {
-        borderWidth: 1,
-        borderColor: theme.colors.border,
-        borderRadius: theme.roundness.lg,
-        padding: 12,
-        fontSize: 16,
-        color: theme.colors.text,
-    },
-    button: {
-        backgroundColor: theme.colors.primary,
-        padding: 16,
-        borderRadius: theme.roundness.lg,
-        alignItems: 'center',
-        marginTop: 10,
-        ...theme.shadows.sm,
-    },
-    buttonDisabled: {
-        opacity: 0.7,
-    },
-    buttonText: {
-        color: theme.colors.white,
-        fontSize: 18,
-        fontWeight: 'bold',
-    },
-    linkButton: {
-        marginTop: 20,
-        alignItems: 'center',
-    },
-    linkText: {
-        color: theme.colors.primary,
-        fontWeight: '600',
-    },
-});
+const styles = {
+    container: tw`flex-1 bg-[#f9fafb]`,
+    scrollContent: tw`min-h-full justify-center p-8`,
+    header: tw`mb-10 items-center`,
+    title: tw`mb-2 text-[32px] font-extrabold text-[#111827]`,
+    subtitle: tw`text-base text-[#4b5563]`,
+    form: tw`rounded-2xl bg-white p-8 shadow-md`,
+    errorText: tw`mb-4 text-center font-semibold text-[#ef4444]`,
+    inputContainer: tw`mb-5`,
+    label: tw`mb-2 text-sm font-bold text-[#4b5563]`,
+    input: tw`rounded-xl border border-[#e5e7eb] p-3 text-base text-[#111827]`,
+    button: tw`mt-2 items-center rounded-xl bg-[#4f46e5] p-4 shadow-sm`,
+    buttonDisabled: tw`opacity-70`,
+    buttonText: tw`text-lg font-bold text-white`,
+    linkButton: tw`mt-5 items-center`,
+    linkText: tw`font-semibold text-[#4f46e5]`,
+};

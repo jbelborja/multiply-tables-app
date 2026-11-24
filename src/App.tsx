@@ -17,6 +17,7 @@ import { SessionProvider } from './context/SessionContext';
 
 import { createDrawerNavigator, DrawerContentScrollView, DrawerItemList, DrawerItem } from '@react-navigation/drawer';
 import { theme } from './styles/theme';
+import tw from 'twrnc';
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
 const Drawer = createDrawerNavigator<RootStackParamList>();
@@ -27,33 +28,17 @@ function CustomDrawerContent(props: any) {
 
   return (
     <DrawerContentScrollView {...props}>
-      <View style={{
-        padding: 20,
-        backgroundColor: theme.colors.white,
-        borderBottomWidth: 1,
-        borderBottomColor: theme.colors.border,
-        marginBottom: 10,
-        alignItems: 'center',
-        flexDirection: 'row',
-      }}>
-        <View style={{
-          width: 50,
-          height: 50,
-          borderRadius: 25,
-          backgroundColor: theme.colors.secondary,
-          justifyContent: 'center',
-          alignItems: 'center',
-          marginRight: 15,
-        }}>
-          <Text style={{ color: theme.colors.white, fontWeight: 'bold', fontSize: 20 }}>
+      <View style={tw`mb-2.5 flex-row items-center border-b border-[#e5e7eb] bg-white p-5`}>
+        <View style={tw`mr-4 h-[50px] w-[50px] items-center justify-center rounded-full bg-[#7c3aed]`}>
+          <Text style={tw`text-xl font-bold text-white`}>
             {userInitial}
           </Text>
         </View>
-        <View style={{ flex: 1 }}>
-          <Text style={{ color: theme.colors.text, fontWeight: 'bold', fontSize: 16 }} numberOfLines={1}>
+        <View style={tw`flex-1`}>
+          <Text style={tw`text-base font-bold text-[#111827]`} numberOfLines={1}>
             {user?.isAnonymous ? 'Usuario Anónimo' : user?.email}
           </Text>
-          <Text style={{ color: theme.colors.textSecondary, fontSize: 12 }}>
+          <Text style={tw`text-xs text-[#4b5563]`}>
             MultiTable Hero
           </Text>
         </View>
@@ -62,7 +47,7 @@ function CustomDrawerContent(props: any) {
       <DrawerItem
         label="Cerrar Sesión"
         onPress={logout}
-        labelStyle={{ color: theme.colors.error, fontWeight: 'bold' }}
+        labelStyle={tw`font-bold text-[#ef4444]`}
       />
     </DrawerContentScrollView>
   );
@@ -104,7 +89,7 @@ function AppNavigator() {
 
   if (loading) {
     return (
-      <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: theme.colors.background }}>
+      <View style={tw`flex-1 items-center justify-center bg-[#f9fafb]`}>
         <ActivityIndicator size="large" color={theme.colors.primary} />
       </View>
     );

@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, ScrollView } from 'react-native';
+import { View, Text, TouchableOpacity, ScrollView } from 'react-native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { RootStackParamList } from '../navigation/types';
-import { theme } from '../styles/theme';
+import tw from 'twrnc';
 
 type HomeScreenNavigationProp = NativeStackNavigationProp<RootStackParamList, 'Home'>;
 
@@ -91,119 +91,27 @@ export default function HomeScreen({ navigation }: Props) {
     );
 }
 
-const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        backgroundColor: theme.colors.background,
-    },
-    scrollContent: {
-        padding: theme.spacing.lg,
-    },
-    header: {
-        marginTop: theme.spacing.xl,
-        marginBottom: theme.spacing.xl,
-    },
-    title: {
-        ...theme.typography.h1,
-        color: theme.colors.text,
-        marginBottom: theme.spacing.xs,
-    },
-    subtitle: {
-        ...theme.typography.body,
-        color: theme.colors.textSecondary,
-    },
-    grid: {
-        flexDirection: 'row',
-        flexWrap: 'wrap',
-        justifyContent: 'space-between',
-        gap: theme.spacing.md,
-        marginBottom: theme.spacing.xl,
-    },
-    tableButton: {
-        width: '30%',
-        aspectRatio: 1,
-        backgroundColor: theme.colors.white,
-        borderRadius: theme.roundness.lg,
-        justifyContent: 'center',
-        alignItems: 'center',
-        ...theme.shadows.sm,
-        borderWidth: 2,
-        borderColor: 'transparent',
-    },
-    tableButtonSelected: {
-        backgroundColor: theme.colors.primary,
-        borderColor: theme.colors.primaryDark,
-    },
-    tableButtonText: {
-        ...theme.typography.h2,
-        color: theme.colors.primary,
-    },
-    tableButtonTextSelected: {
-        color: theme.colors.white,
-    },
-    sectionHeader: {
-        marginBottom: theme.spacing.md,
-    },
-    sectionTitle: {
-        ...theme.typography.h3,
-        color: theme.colors.text,
-    },
-    modeContainer: {
-        flexDirection: 'row',
-        gap: theme.spacing.md,
-        marginBottom: theme.spacing.xl,
-    },
-    modeButton: {
-        flex: 1,
-        backgroundColor: theme.colors.white,
-        borderRadius: theme.roundness.lg,
-        padding: theme.spacing.md,
-        alignItems: 'center',
-        ...theme.shadows.sm,
-        borderWidth: 2,
-        borderColor: 'transparent',
-    },
-    modeButtonActive: {
-        borderColor: theme.colors.secondary,
-        backgroundColor: '#F5F3FF',
-    },
-    modeIcon: {
-        fontSize: 24,
-        marginBottom: 4,
-    },
-    modeText: {
-        ...theme.typography.caption,
-        fontWeight: 'bold',
-        color: theme.colors.textSecondary,
-    },
-    modeTextActive: {
-        color: theme.colors.secondary,
-    },
-    startButton: {
-        backgroundColor: theme.colors.success,
-        padding: theme.spacing.md,
-        borderRadius: theme.roundness.xl,
-        alignItems: 'center',
-        ...theme.shadows.md,
-        marginBottom: theme.spacing.xl,
-    },
-    startButtonText: {
-        color: theme.colors.white,
-        fontSize: 20,
-        fontWeight: 'bold',
-    },
-    infoCard: {
-        backgroundColor: theme.colors.white,
-        padding: theme.spacing.md,
-        borderRadius: theme.roundness.lg,
-        borderLeftWidth: 4,
-        borderLeftColor: theme.colors.primary,
-        ...theme.shadows.sm,
-        marginBottom: theme.spacing.xl,
-    },
-    infoText: {
-        ...theme.typography.body,
-        color: theme.colors.textSecondary,
-        fontSize: 14,
-    },
-});
+const styles = {
+    container: tw`flex-1 bg-[#f9fafb]`,
+    scrollContent: tw`p-6`,
+    header: tw`mt-8 mb-8`,
+    title: tw`mb-1 text-[32px] font-extrabold text-[#111827]`,
+    subtitle: tw`text-base text-[#4b5563]`,
+    grid: tw`mb-8 flex-row flex-wrap justify-between gap-4`,
+    tableButton: tw`aspect-square w-[30%] items-center justify-center rounded-xl border-2 border-transparent bg-white shadow-sm`,
+    tableButtonSelected: tw`border-[#4338ca] bg-[#4f46e5]`,
+    tableButtonText: tw`text-2xl font-bold text-[#4f46e5]`,
+    tableButtonTextSelected: tw`text-white`,
+    sectionHeader: tw`mb-4`,
+    sectionTitle: tw`text-lg font-semibold text-[#111827]`,
+    modeContainer: tw`mb-8 flex-row gap-4`,
+    modeButton: tw`flex-1 items-center rounded-xl border-2 border-transparent bg-white p-4 shadow-sm`,
+    modeButtonActive: tw`border-[#7c3aed] bg-[#f5f3ff]`,
+    modeIcon: tw`mb-1 text-2xl`,
+    modeText: tw`text-sm font-bold text-[#4b5563]`,
+    modeTextActive: tw`text-[#7c3aed]`,
+    startButton: tw`mb-8 items-center rounded-2xl bg-[#10b981] p-4 shadow-md`,
+    startButtonText: tw`text-xl font-bold text-white`,
+    infoCard: tw`mb-8 rounded-xl border-l-4 border-[#4f46e5] bg-white p-4 shadow-sm`,
+    infoText: tw`text-sm text-[#4b5563]`,
+};

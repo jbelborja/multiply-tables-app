@@ -1,9 +1,10 @@
 import React, { useState } from 'react';
-import { StyleSheet, Text, View, TextInput, TouchableOpacity, ActivityIndicator, Alert } from 'react-native';
+import { Text, View, TextInput, TouchableOpacity, ActivityIndicator, Alert } from 'react-native';
 import { useAuth } from '../context/AuthContext';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { RootStackParamList } from '../navigation/types';
 import { theme } from '../styles/theme';
+import tw from 'twrnc';
 
 type Props = NativeStackScreenProps<RootStackParamList, 'ForgotPassword'>;
 
@@ -76,65 +77,16 @@ export default function ForgotPasswordScreen({ navigation }: Props) {
     );
 }
 
-const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        backgroundColor: theme.colors.background,
-        padding: theme.spacing.xl,
-        justifyContent: 'center',
-    },
-    content: {
-        alignItems: 'center',
-    },
-    title: {
-        ...theme.typography.h2,
-        color: theme.colors.text,
-        marginBottom: 10,
-        textAlign: 'center',
-    },
-    subtitle: {
-        ...theme.typography.body,
-        color: theme.colors.textSecondary,
-        textAlign: 'center',
-        marginBottom: 30,
-    },
-    form: {
-        width: '100%',
-        backgroundColor: theme.colors.white,
-        padding: theme.spacing.xl,
-        borderRadius: theme.roundness.xl,
-        ...theme.shadows.md,
-    },
-    input: {
-        borderWidth: 1,
-        borderColor: theme.colors.border,
-        borderRadius: theme.roundness.lg,
-        padding: 12,
-        fontSize: 16,
-        color: theme.colors.text,
-        marginBottom: 20,
-    },
-    button: {
-        backgroundColor: theme.colors.primary,
-        padding: 16,
-        borderRadius: theme.roundness.lg,
-        alignItems: 'center',
-        ...theme.shadows.sm,
-    },
-    buttonDisabled: {
-        opacity: 0.7,
-    },
-    buttonText: {
-        color: theme.colors.white,
-        fontSize: 18,
-        fontWeight: 'bold',
-    },
-    linkButton: {
-        marginTop: 20,
-        alignItems: 'center',
-    },
-    linkText: {
-        color: theme.colors.primary,
-        fontWeight: '600',
-    },
-});
+const styles = {
+    container: tw`flex-1 justify-center bg-[#f9fafb] p-8`,
+    content: tw`items-center`,
+    title: tw`mb-2.5 text-center text-2xl font-bold text-[#111827]`,
+    subtitle: tw`mb-[30px] text-center text-base text-[#4b5563]`,
+    form: tw`w-full rounded-2xl bg-white p-8 shadow-md`,
+    input: tw`mb-5 rounded-xl border border-[#e5e7eb] p-3 text-base text-[#111827]`,
+    button: tw`items-center rounded-xl bg-[#4f46e5] p-4 shadow-sm`,
+    buttonDisabled: tw`opacity-70`,
+    buttonText: tw`text-lg font-bold text-white`,
+    linkButton: tw`mt-5 items-center`,
+    linkText: tw`font-semibold text-[#4f46e5]`,
+};

@@ -1,8 +1,9 @@
 import React from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, FlatList, ActivityIndicator } from 'react-native';
+import { View, Text, TouchableOpacity, FlatList, ActivityIndicator } from 'react-native';
 import { useAuth } from '../context/AuthContext';
 import { useSession, PracticaResult } from '../context/SessionContext';
 import { theme } from '../styles/theme';
+import tw from 'twrnc';
 
 export default function ProfileScreen() {
     const { user, logout } = useAuth();
@@ -78,124 +79,26 @@ export default function ProfileScreen() {
     );
 }
 
-const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        backgroundColor: theme.colors.background,
-    },
-    userHeader: {
-        backgroundColor: theme.colors.white,
-        padding: theme.spacing.xl,
-        alignItems: 'center',
-        borderBottomWidth: 1,
-        borderBottomColor: theme.colors.border,
-        ...theme.shadows.sm,
-    },
-    avatar: {
-        width: 80,
-        height: 80,
-        borderRadius: 40,
-        justifyContent: 'center',
-        alignItems: 'center',
-        marginBottom: theme.spacing.md,
-    },
-    avatarText: {
-        fontSize: 32,
-        fontWeight: 'bold',
-        color: theme.colors.white,
-    },
-    emailText: {
-        ...theme.typography.h3,
-        color: theme.colors.text,
-        marginBottom: 4,
-    },
-    statsLabel: {
-        ...theme.typography.caption,
-        color: theme.colors.textSecondary,
-    },
-    historySection: {
-        flex: 1,
-        padding: theme.spacing.lg,
-    },
-    sectionTitle: {
-        ...theme.typography.h3,
-        color: theme.colors.text,
-        marginBottom: theme.spacing.md,
-    },
-    listContainer: {
-        paddingBottom: theme.spacing.xl,
-    },
-    historyItem: {
-        flexDirection: 'row',
-        justifyContent: 'space-between',
-        alignItems: 'center',
-        padding: theme.spacing.md,
-        backgroundColor: theme.colors.white,
-        borderRadius: theme.roundness.lg,
-        marginBottom: theme.spacing.sm,
-        ...theme.shadows.sm,
-    },
-    historyDate: {
-        ...theme.typography.caption,
-        color: theme.colors.textSecondary,
-        marginBottom: 2,
-    },
-    historyMode: {
-        ...theme.typography.body,
-        fontSize: 14,
-        fontWeight: '600',
-        color: theme.colors.primary,
-    },
-    scoreBadge: {
-        backgroundColor: theme.colors.background,
-        paddingHorizontal: 12,
-        paddingVertical: 6,
-        borderRadius: theme.roundness.full,
-    },
-    historyScore: {
-        fontWeight: 'bold',
-        fontSize: 14,
-        color: theme.colors.text,
-    },
-    emptyContainer: {
-        flex: 1,
-        justifyContent: 'center',
-        alignItems: 'center',
-        marginTop: 40,
-    },
-    emptyText: {
-        ...theme.typography.body,
-        fontWeight: 'bold',
-        color: theme.colors.textSecondary,
-        textAlign: 'center',
-    },
-    emptySubtext: {
-        ...theme.typography.caption,
-        color: theme.colors.textLight,
-        textAlign: 'center',
-        marginTop: 4,
-    },
-    logoutButton: {
-        marginTop: theme.spacing.md,
-        paddingHorizontal: 16,
-        paddingVertical: 8,
-        borderRadius: theme.roundness.md,
-        backgroundColor: '#FEE2E2',
-    },
-    logoutText: {
-        color: theme.colors.error,
-        fontWeight: 'bold',
-        fontSize: 14,
-    },
-    loadingContainer: {
-        flex: 1,
-        justifyContent: 'center',
-        alignItems: 'center',
-        backgroundColor: theme.colors.background,
-    },
-    loadingText: {
-        marginTop: 10,
-        color: theme.colors.textSecondary,
-        ...theme.typography.body,
-    },
-});
+const styles = {
+    container: tw`flex-1 bg-[#f9fafb]`,
+    userHeader: tw`items-center border-b border-[#e5e7eb] bg-white p-8 shadow-sm`,
+    avatar: tw`mb-4 h-20 w-20 items-center justify-center rounded-full`,
+    avatarText: tw`text-[32px] font-bold text-white`,
+    emailText: tw`mb-1 text-lg font-semibold text-[#111827]`,
+    statsLabel: tw`text-sm text-[#4b5563]`,
+    historySection: tw`flex-1 p-6`,
+    sectionTitle: tw`mb-4 text-lg font-semibold text-[#111827]`,
+    listContainer: tw`pb-8`,
+    historyItem: tw`mb-2 flex-row items-center justify-between rounded-xl bg-white p-4 shadow-sm`,
+    historyDate: tw`mb-0.5 text-sm text-[#4b5563]`,
+    historyMode: tw`text-sm font-semibold text-[#4f46e5]`,
+    scoreBadge: tw`rounded-full bg-[#f9fafb] px-3 py-1.5`,
+    historyScore: tw`text-sm font-bold text-[#111827]`,
+    emptyContainer: tw`mt-10 flex-1 items-center justify-center`,
+    emptyText: tw`text-center text-base font-bold text-[#4b5563]`,
+    emptySubtext: tw`mt-1 text-center text-sm text-[#9ca3af]`,
+    logoutButton: tw`mt-4 rounded-lg bg-[#fee2e2] px-4 py-2`,
+    logoutText: tw`text-sm font-bold text-[#ef4444]`,
+    loadingContainer: tw`flex-1 items-center justify-center bg-[#f9fafb]`,
+    loadingText: tw`mt-2.5 text-base text-[#4b5563]`,
+};

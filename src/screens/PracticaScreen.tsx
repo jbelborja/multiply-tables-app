@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, TextInput, StyleSheet, TouchableOpacity, KeyboardAvoidingView, Platform, ScrollView } from 'react-native';
+import { View, Text, TextInput, TouchableOpacity, KeyboardAvoidingView, Platform, ScrollView } from 'react-native';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { RootStackParamList } from '../navigation/types';
 import { PracticaEngine, Question } from '../utils/PracticaEngine';
 import { theme } from '../styles/theme';
+import tw from 'twrnc';
 
 type Props = NativeStackScreenProps<RootStackParamList, 'Practica'>;
 
@@ -187,152 +188,34 @@ export default function PracticaScreen({ navigation, route }: Props) {
     );
 }
 
-const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        backgroundColor: theme.colors.background,
-    },
-    scrollContent: {
-        padding: theme.spacing.lg,
-        paddingBottom: theme.spacing.xl * 2,
-    },
-    topSection: {
-        marginBottom: theme.spacing.lg,
-    },
-    progressHeader: {
-        flexDirection: 'row',
-        justifyContent: 'space-between',
-        marginBottom: theme.spacing.sm,
-    },
-    counterText: {
-        ...theme.typography.caption,
-        color: theme.colors.textSecondary,
-    },
-    scoreText: {
-        ...theme.typography.caption,
-        fontWeight: 'bold',
-        color: theme.colors.primary,
-    },
-    progressBarBg: {
-        height: 8,
-        backgroundColor: theme.colors.border,
-        borderRadius: 4,
-        overflow: 'hidden',
-    },
-    progressBarFill: {
-        height: '100%',
-        backgroundColor: theme.colors.primary,
-    },
-    card: {
-        backgroundColor: theme.colors.white,
-        borderRadius: theme.roundness.xl,
-        padding: theme.spacing.xl,
-        ...theme.shadows.md,
-    },
-    promptLabel: {
-        ...theme.typography.caption,
-        color: theme.colors.textLight,
-        textTransform: 'uppercase',
-        letterSpacing: 1,
-        textAlign: 'center',
-    },
-    promptText: {
-        ...theme.typography.h1,
-        fontSize: 48,
-        color: theme.colors.text,
-        marginVertical: theme.spacing.md,
-        textAlign: 'center',
-    },
-    divider: {
-        height: 1,
-        backgroundColor: theme.colors.border,
-        marginBottom: theme.spacing.lg,
-    },
-    typedContainer: {
-        marginBottom: theme.spacing.lg,
-    },
-    input: {
-        borderWidth: 2,
-        borderColor: theme.colors.border,
-        borderRadius: theme.roundness.lg,
-        padding: theme.spacing.md,
-        fontSize: 24,
-        textAlign: 'center',
-        color: theme.colors.text,
-        backgroundColor: theme.colors.background,
-    },
-    inputCorrect: {
-        borderColor: theme.colors.success,
-        backgroundColor: '#ECFDF5',
-    },
-    inputIncorrect: {
-        borderColor: theme.colors.error,
-        backgroundColor: '#FEF2F2',
-    },
-    optionsContainer: {
-        flexDirection: 'row',
-        flexWrap: 'wrap',
-        justifyContent: 'space-between',
-        gap: theme.spacing.md,
-        marginBottom: theme.spacing.lg,
-    },
-    optionButton: {
-        width: '45%',
-        backgroundColor: theme.colors.white,
-        padding: theme.spacing.lg,
-        borderRadius: theme.roundness.lg,
-        borderWidth: 1,
-        borderColor: theme.colors.border,
-        alignItems: 'center',
-        ...theme.shadows.sm,
-    },
-    optionButtonCorrect: {
-        backgroundColor: theme.colors.success,
-        borderColor: theme.colors.success,
-    },
-    optionButtonIncorrect: {
-        backgroundColor: theme.colors.error,
-        borderColor: theme.colors.error,
-    },
-    optionText: {
-        ...theme.typography.h2,
-        color: theme.colors.text,
-    },
-    feedbackBox: {
-        padding: theme.spacing.md,
-        borderRadius: theme.roundness.lg,
-        marginBottom: theme.spacing.lg,
-        alignItems: 'center',
-    },
-    feedbackBoxCorrect: {
-        backgroundColor: '#ECFDF5',
-    },
-    feedbackBoxIncorrect: {
-        backgroundColor: '#FEF2F2',
-    },
-    feedbackText: {
-        ...theme.typography.body,
-        fontWeight: 'bold',
-        textAlign: 'center',
-        color: theme.colors.text,
-    },
-    actionContainer: {
-        marginTop: theme.spacing.xs,
-    },
-    mainButton: {
-        backgroundColor: theme.colors.primary,
-        padding: theme.spacing.md,
-        borderRadius: theme.roundness.lg,
-        alignItems: 'center',
-        ...theme.shadows.sm,
-    },
-    buttonDisabled: {
-        backgroundColor: theme.colors.textLight,
-        opacity: 0.5,
-    },
-    buttonText: {
-        color: theme.colors.white,
-        fontSize: 18,
-        fontWeight: 'bold',
-    },
-});
+const styles = {
+    container: tw`flex-1 bg-[#f9fafb]`,
+    scrollContent: tw`p-6 pb-16`,
+    topSection: tw`mb-6`,
+    progressHeader: tw`mb-2 flex-row justify-between`,
+    counterText: tw`text-sm text-[#4b5563]`,
+    scoreText: tw`text-sm font-bold text-[#4f46e5]`,
+    progressBarBg: tw`h-2 overflow-hidden rounded bg-[#e5e7eb]`,
+    progressBarFill: tw`h-full bg-[#4f46e5]`,
+    card: tw`rounded-2xl bg-white p-8 shadow-md`,
+    promptLabel: tw`text-center text-sm uppercase tracking-widest text-[#9ca3af]`,
+    promptText: tw`my-4 text-center text-[48px] font-extrabold text-[#111827]`,
+    divider: tw`mb-6 h-px bg-[#e5e7eb]`,
+    typedContainer: tw`mb-6`,
+    input: tw`rounded-xl border-2 border-[#e5e7eb] bg-[#f9fafb] p-4 text-center text-2xl text-[#111827]`,
+    inputCorrect: tw`border-[#10b981] bg-[#ecfdf5]`,
+    inputIncorrect: tw`border-[#ef4444] bg-[#fef2f2]`,
+    optionsContainer: tw`mb-6 flex-row flex-wrap justify-between gap-4`,
+    optionButton: tw`w-[45%] items-center rounded-xl border border-[#e5e7eb] bg-white p-6 shadow-sm`,
+    optionButtonCorrect: tw`border-[#10b981] bg-[#10b981]`,
+    optionButtonIncorrect: tw`border-[#ef4444] bg-[#ef4444]`,
+    optionText: tw`text-2xl font-bold text-[#111827]`,
+    feedbackBox: tw`mb-6 items-center rounded-xl p-4`,
+    feedbackBoxCorrect: tw`bg-[#ecfdf5]`,
+    feedbackBoxIncorrect: tw`bg-[#fef2f2]`,
+    feedbackText: tw`text-center text-base font-bold text-[#111827]`,
+    actionContainer: tw`mt-1`,
+    mainButton: tw`items-center rounded-xl bg-[#4f46e5] p-4 shadow-sm`,
+    buttonDisabled: tw`bg-[#9ca3af] opacity-50`,
+    buttonText: tw`text-lg font-bold text-white`,
+};

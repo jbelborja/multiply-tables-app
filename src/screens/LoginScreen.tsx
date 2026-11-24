@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { StyleSheet, Text, View, TouchableOpacity, ActivityIndicator, TextInput, KeyboardAvoidingView, ScrollView, Platform } from 'react-native';
+import { Text, View, TouchableOpacity, ActivityIndicator, TextInput, KeyboardAvoidingView, ScrollView, Platform } from 'react-native';
 import { useAuth } from '../context/AuthContext';
 import { GoogleAuthProvider, signInWithPopup } from 'firebase/auth';
 import { auth } from '../config/firebase';
@@ -7,6 +7,7 @@ import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { RootStackParamList } from '../navigation/types';
 
 import { theme } from '../styles/theme';
+import tw from 'twrnc';
 
 type Props = NativeStackScreenProps<RootStackParamList, 'Login'>;
 
@@ -270,158 +271,36 @@ export default function LoginScreen({ navigation }: Props) {
   );
 }
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: theme.colors.background,
-  },
-  scrollContent: {
-    padding: theme.spacing.xl,
-    justifyContent: 'center',
-    minHeight: '100%',
-  },
-  loadingContainer: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: theme.colors.background,
-  },
-  header: {
-    alignItems: 'center',
-    marginBottom: 30,
-  },
-  logoContainer: {
-    width: 60,
-    height: 60,
-    borderRadius: 30,
-    backgroundColor: theme.colors.white,
-    justifyContent: 'center',
-    alignItems: 'center',
-    ...theme.shadows.md,
-    marginBottom: 15,
-  },
-  logoEmoji: {
-    fontSize: 30,
-  },
-  title: {
-    ...theme.typography.h1,
-    color: theme.colors.text,
-    textAlign: 'center',
-  },
-  subtitle: {
-    ...theme.typography.body,
-    color: theme.colors.textSecondary,
-    textAlign: 'center',
-  },
-  formCard: {
-    backgroundColor: theme.colors.white,
-    borderRadius: theme.roundness.xl,
-    padding: theme.spacing.xl,
-    ...theme.shadows.md,
-  },
-  formTitle: {
-    ...theme.typography.h2,
-    color: theme.colors.text,
-    marginBottom: 20,
-    textAlign: 'center',
-  },
-  errorText: {
-    color: theme.colors.error,
-    marginBottom: 15,
-    textAlign: 'center',
-    fontWeight: '600',
-  },
-  inputGroup: {
-    marginBottom: 15,
-  },
-  label: {
-    ...theme.typography.caption,
-    color: theme.colors.textSecondary,
-    marginBottom: 5,
-    fontWeight: '700',
-  },
-  input: {
-    borderWidth: 1,
-    borderColor: theme.colors.border,
-    borderRadius: theme.roundness.lg,
-    padding: 12,
-    fontSize: 16,
-    color: theme.colors.text,
-  },
-  forgotPassword: {
-    alignSelf: 'flex-end',
-    marginBottom: 20,
-  },
-  forgotPasswordText: {
-    color: theme.colors.primary,
-    fontSize: 14,
-    fontWeight: '600',
-  },
-  button: {
-    paddingVertical: 14,
-    borderRadius: theme.roundness.lg,
-    alignItems: 'center',
-    justifyContent: 'center',
-    ...theme.shadows.sm,
-  },
-  primaryButton: {
-    backgroundColor: theme.colors.primary,
-  },
-  buttonDisabled: {
-    opacity: 0.7,
-  },
-  buttonText: {
-    color: theme.colors.white,
-    fontSize: 16,
-    fontWeight: 'bold',
-  },
-  registerLink: {
-    marginTop: 20,
-    alignItems: 'center',
-  },
-  registerLinkText: {
-    color: theme.colors.textSecondary,
-    fontSize: 14,
-  },
-  registerHighlight: {
-    color: theme.colors.primary,
-    fontWeight: 'bold',
-  },
-  dividerContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginVertical: 25,
-  },
-  divider: {
-    flex: 1,
-    height: 1,
-    backgroundColor: theme.colors.border,
-  },
-  dividerText: {
-    marginHorizontal: 10,
-    color: theme.colors.textLight,
-    fontSize: 12,
-  },
-  socialButtons: {
-    flexDirection: 'row',
-    gap: 15,
-  },
-  googleButton: {
-    flex: 1,
-    backgroundColor: theme.colors.white,
-    borderWidth: 1,
-    borderColor: theme.colors.border,
-  },
-  googleButtonText: {
-    color: theme.colors.text,
-    fontWeight: '600',
-  },
-  anonymousButton: {
-    flex: 1,
-    backgroundColor: theme.colors.secondary,
-  },
-  anonymousButtonText: {
-    color: theme.colors.white,
-    fontWeight: '600',
-  },
-});
+const styles = {
+  container: tw`flex-1 bg-[#f9fafb]`,
+  scrollContent: tw`min-h-full justify-center p-8`,
+  loadingContainer: tw`flex-1 items-center justify-center bg-[#f9fafb]`,
+  header: tw`mb-[30px] items-center`,
+  logoContainer: tw`mb-4 h-[60px] w-[60px] items-center justify-center rounded-full bg-white shadow-md`,
+  logoEmoji: tw`text-[30px]`,
+  title: tw`text-center text-[32px] font-extrabold text-[#111827]`,
+  subtitle: tw`text-center text-base text-[#4b5563]`,
+  formCard: tw`rounded-2xl bg-white p-8 shadow-md`,
+  formTitle: tw`mb-5 text-center text-2xl font-bold text-[#111827]`,
+  errorText: tw`mb-4 text-center font-semibold text-[#ef4444]`,
+  inputGroup: tw`mb-4`,
+  label: tw`mb-1 text-sm font-bold text-[#4b5563]`,
+  input: tw`rounded-xl border border-[#e5e7eb] p-3 text-base text-[#111827]`,
+  forgotPassword: tw`mb-5 self-end`,
+  forgotPasswordText: tw`text-sm font-semibold text-[#4f46e5]`,
+  button: tw`items-center justify-center rounded-xl py-3.5 shadow-sm`,
+  primaryButton: tw`bg-[#4f46e5]`,
+  buttonDisabled: tw`opacity-70`,
+  buttonText: tw`text-base font-bold text-white`,
+  registerLink: tw`mt-5 items-center`,
+  registerLinkText: tw`text-sm text-[#4b5563]`,
+  registerHighlight: tw`font-bold text-[#4f46e5]`,
+  dividerContainer: tw`my-6 flex-row items-center`,
+  divider: tw`h-px flex-1 bg-[#e5e7eb]`,
+  dividerText: tw`mx-2.5 text-xs text-[#9ca3af]`,
+  socialButtons: tw`flex-row gap-4`,
+  googleButton: tw`flex-1 border border-[#e5e7eb] bg-white`,
+  googleButtonText: tw`font-semibold text-[#111827]`,
+  anonymousButton: tw`flex-1 bg-[#7c3aed]`,
+  anonymousButtonText: tw`font-semibold text-white`,
+};
