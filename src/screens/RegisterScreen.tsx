@@ -55,66 +55,71 @@ export default function RegisterScreen({ navigation }: Props) {
             style={styles.container}
         >
             <ScrollView contentContainerStyle={styles.scrollContent}>
-                <View style={styles.header}>
-                    <Text style={styles.title}>Crear Cuenta</Text>
-                    <Text style={styles.subtitle}>Regístrate para guardar tu progreso</Text>
-                </View>
-
-                <View style={styles.form}>
-                    {error ? <Text style={styles.errorText}>{error}</Text> : null}
-
-                    <View style={styles.inputContainer}>
-                        <Text style={styles.label}>Correo Electrónico</Text>
-                        <TextInput
-                            style={styles.input}
-                            placeholder="ejemplo@correo.com"
-                            value={email}
-                            onChangeText={setEmail}
-                            keyboardType="email-address"
-                            autoCapitalize="none"
-                        />
+                <View style={styles.page}>
+                    <View style={styles.header}>
+                        <Text style={styles.headerEmoji}>🌈</Text>
+                        <Text style={styles.eyebrow}>ÚNETE A LA AVENTURA</Text>
+                        <Text style={styles.title}>¡Crea tu cuenta!</Text>
+                        <Text style={styles.subtitle}>Guarda tus misiones y celebra todo lo que aprendes.</Text>
                     </View>
 
-                    <View style={styles.inputContainer}>
-                        <Text style={styles.label}>Contraseña</Text>
-                        <TextInput
-                            style={styles.input}
-                            placeholder="Mínimo 6 caracteres"
-                            value={password}
-                            onChangeText={setPassword}
-                            secureTextEntry
-                        />
+                    <View style={styles.form}>
+                        {error ? <Text style={styles.errorText}>{error}</Text> : null}
+
+                        <View style={styles.inputContainer}>
+                            <Text style={styles.label}>Correo electrónico</Text>
+                            <TextInput
+                                style={styles.input}
+                                placeholder="ejemplo@correo.com"
+                                value={email}
+                                onChangeText={setEmail}
+                                keyboardType="email-address"
+                                autoCapitalize="none"
+                            />
+                        </View>
+
+                        <View style={styles.inputContainer}>
+                            <Text style={styles.label}>Contraseña</Text>
+                            <TextInput
+                                style={styles.input}
+                                placeholder="Al menos 6 caracteres"
+                                value={password}
+                                onChangeText={setPassword}
+                                secureTextEntry
+                            />
+                        </View>
+
+                        <View style={styles.inputContainer}>
+                            <Text style={styles.label}>Repite tu contraseña</Text>
+                            <TextInput
+                                style={styles.input}
+                                placeholder="Escríbela otra vez"
+                                value={confirmPassword}
+                                onChangeText={setConfirmPassword}
+                                secureTextEntry
+                            />
+                        </View>
+
+                        <TouchableOpacity
+                            style={[styles.button, loading && styles.buttonDisabled]}
+                            onPress={handleRegister}
+                            disabled={loading}
+                            activeOpacity={0.82}
+                        >
+                            {loading ? (
+                                <ActivityIndicator color={theme.colors.white} />
+                            ) : (
+                                <Text style={styles.buttonText}>¡Crear cuenta!</Text>
+                            )}
+                        </TouchableOpacity>
+
+                        <TouchableOpacity
+                            style={styles.linkButton}
+                            onPress={() => navigation.navigate('Login')}
+                        >
+                            <Text style={styles.linkText}>¿Ya tienes cuenta? Entra aquí</Text>
+                        </TouchableOpacity>
                     </View>
-
-                    <View style={styles.inputContainer}>
-                        <Text style={styles.label}>Confirmar Contraseña</Text>
-                        <TextInput
-                            style={styles.input}
-                            placeholder="Repite tu contraseña"
-                            value={confirmPassword}
-                            onChangeText={setConfirmPassword}
-                            secureTextEntry
-                        />
-                    </View>
-
-                    <TouchableOpacity
-                        style={[styles.button, loading && styles.buttonDisabled]}
-                        onPress={handleRegister}
-                        disabled={loading}
-                    >
-                        {loading ? (
-                            <ActivityIndicator color={theme.colors.white} />
-                        ) : (
-                            <Text style={styles.buttonText}>Registrarse</Text>
-                        )}
-                    </TouchableOpacity>
-
-                    <TouchableOpacity
-                        style={styles.linkButton}
-                        onPress={() => navigation.navigate('Login')}
-                    >
-                        <Text style={styles.linkText}>¿Ya tienes cuenta? Inicia sesión</Text>
-                    </TouchableOpacity>
                 </View>
             </ScrollView>
         </KeyboardAvoidingView>
@@ -123,18 +128,21 @@ export default function RegisterScreen({ navigation }: Props) {
 
 const styles = {
     container: tw`flex-1 bg-[#f9fafb]`,
-    scrollContent: tw`min-h-full justify-center p-8`,
-    header: tw`mb-10 items-center`,
-    title: tw`mb-2 text-[32px] font-extrabold text-[#111827]`,
-    subtitle: tw`text-base text-[#4b5563]`,
-    form: tw`rounded-2xl bg-white p-8 shadow-md`,
-    errorText: tw`mb-4 text-center font-semibold text-[#ef4444]`,
-    inputContainer: tw`mb-5`,
-    label: tw`mb-2 text-sm font-bold text-[#4b5563]`,
-    input: tw`rounded-xl border border-[#e5e7eb] p-3 text-base text-[#111827]`,
-    button: tw`mt-2 items-center rounded-xl bg-[#4f46e5] p-4 shadow-sm`,
+    scrollContent: tw`min-h-full justify-center px-4 py-6`,
+    page: [tw`w-full self-center`, { maxWidth: 500 }],
+    header: tw`mb-5 items-center rounded-3xl bg-[#e7f1ff] px-5 py-5`,
+    headerEmoji: tw`mb-1 text-[42px]`,
+    eyebrow: tw`text-[10px] font-black tracking-widest text-[#7046d8]`,
+    title: tw`mb-1 mt-1 text-center text-[28px] font-black text-[#172554]`,
+    subtitle: tw`text-center text-sm text-[#52617f]`,
+    form: tw`rounded-3xl border border-[#e7ecf6] bg-white p-5 shadow-sm`,
+    errorText: tw`mb-4 rounded-xl bg-[#fff1f2] p-3 text-center font-semibold text-[#c33c4a]`,
+    inputContainer: tw`mb-4`,
+    label: tw`mb-2 text-sm font-bold text-[#465779]`,
+    input: tw`min-h-[52px] rounded-xl border border-[#dce4f2] bg-[#fbfcff] px-4 py-3 text-base text-[#172554]`,
+    button: tw`mt-2 min-h-[54px] items-center justify-center rounded-xl bg-[#168f68] p-4 shadow-sm`,
     buttonDisabled: tw`opacity-70`,
-    buttonText: tw`text-lg font-bold text-white`,
-    linkButton: tw`mt-5 items-center`,
+    buttonText: tw`text-base font-black text-white`,
+    linkButton: tw`mt-4 items-center py-2`,
     linkText: tw`font-semibold text-[#4f46e5]`,
 };

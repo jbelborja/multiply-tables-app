@@ -33,25 +33,20 @@ export const userService = {
      * Fetches the quiz history for a user
      */
     async getPracticaHistory(userId: string): Promise<PracticaResult[]> {
-        try {
-            const resultsRef = collection(db, 'users', userId, 'results');
-            const q = query(resultsRef, orderBy('date', 'desc'), limit(50));
-            const querySnapshot = await getDocs(q);
+        const resultsRef = collection(db, 'users', userId, 'results');
+        const q = query(resultsRef, orderBy('date', 'desc'), limit(50));
+        const querySnapshot = await getDocs(q);
 
-            return querySnapshot.docs.map(doc => {
-                const data = doc.data();
-                return {
-                    id: doc.id,
-                    score: data.score,
-                    total: data.total,
-                    mode: data.mode,
-                    tables: data.tables || [],
-                    date: data.date instanceof Timestamp ? data.date.toDate() : new Date(data.date),
-                } as PracticaResult;
-            });
-        } catch (error) {
-            console.error('Error fetching practica history from Firestore:', error);
-            return [];
-        }
+        return querySnapshot.docs.map(doc => {
+            const data = doc.data();
+            return {
+                id: doc.id,
+                score: data.score,
+                total: data.total,
+                mode: data.mode,
+                tables: data.tables || [],
+                date: data.date instanceof Timestamp ? data.date.toDate() : new Date(data.date),
+            } as PracticaResult;
+        });
     }
 };

@@ -13,9 +13,11 @@ export interface PracticaResult {
 
 interface SessionContextType {
     history: PracticaResult[];
-    addResult: (result: Omit<PracticaResult, 'id' | 'date'>) => void;
+    addResult: (result: Omit<PracticaResult, 'id' | 'date'>) => Promise<void>;
     clearSession: () => void;
     loadingHistory: boolean;
+    historyError: string | null;
+    saveError: string | null;
 }
 
 const SessionContext = createContext<SessionContextType | undefined>(undefined);
@@ -24,43 +26,37 @@ export const SessionProvider = ({ children }: { children: ReactNode }) => {
     const { user } = useAuth();
     const [history, setHistory] = useState<PracticaResult[]>([]);
     const [loadingHistory, setLoadingHistory] = useState(false);
+    const [historyError, setHistoryError] = useState<string | null>(null);
+    const [saveError, setSaveError] = useState<string | null>(null);
 
-    // Load history when user changes
     useEffect(() => {
-        let timeoutId: NodeJS.Timeout;
+        let isCurrentUser = true;
+        setHistory([]);
+        setHistoryError(null);
+        setSaveError(null);
 
-        const loadHistory = async () => {
-            if (user) {
-                setLoadingHistory(true);
+        if (!user) {
+            setLoadingHistory(false);
+            return;
+        }
 
-                // Failsafe: stop loading after 8 seconds no matter what
-                timeoutId = setTimeout(() => {
-                    setLoadingHistory(current => {
-                        if (current) {
-                            console.warn('SessionContext: History loading timed out (8s)');
-                        }
-                        return false;
-                    });
-                }, 8000);
-
-                try {
-                    const onlineHistory = await userService.getPracticaHistory(user.uid);
-                    setHistory(onlineHistory);
-                } catch (error) {
-                    console.error('Failed to load history:', error);
-                } finally {
-                    setLoadingHistory(false);
-                    clearTimeout(timeoutId);
+        setLoadingHistory(true);
+        userService.getPracticaHistory(user.uid)
+            .then(onlineHistory => {
+                if (isCurrentUser) setHistory(onlineHistory);
+            })
+            .catch(error => {
+                console.error('Failed to load history from Firestore:', error);
+                if (isCurrentUser) {
+                    setHistoryError('No se pudo cargar el historial. Comprueba la conexión e inténtalo de nuevo.');
                 }
-            } else {
-                setHistory([]);
-            }
-        };
-
-        loadHistory();
+            })
+            .finally(() => {
+                if (isCurrentUser) setLoadingHistory(false);
+            });
 
         return () => {
-            if (timeoutId) clearTimeout(timeoutId);
+            isCurrentUser = false;
         };
     }, [user]);
 
@@ -76,11 +72,15 @@ export const SessionProvider = ({ children }: { children: ReactNode }) => {
 
         // Save to Firebase if user is logged in
         if (user) {
+            setSaveError(null);
             try {
                 await userService.savePracticaResult(user.uid, result);
             } catch (error) {
                 console.error('Failed to save result to Firebase:', error);
+                setSaveError('No se pudo guardar esta sesión. Inténtalo de nuevo más tarde.');
             }
+        } else {
+            setSaveError('Inicia sesión con una cuenta para guardar tu historial.');
         }
     };
 
@@ -89,7 +89,7 @@ export const SessionProvider = ({ children }: { children: ReactNode }) => {
     };
 
     return (
-        <SessionContext.Provider value={{ history, addResult, clearSession, loadingHistory }}>
+        <SessionContext.Provider value={{ history, addResult, clearSession, loadingHistory, historyError, saveError }}>
             {children}
         </SessionContext.Provider>
     );

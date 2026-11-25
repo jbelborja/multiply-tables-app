@@ -59,14 +59,16 @@ function AuthenticatedNavigator() {
       drawerContent={(props) => <CustomDrawerContent {...props} />}
       screenOptions={{
         headerStyle: {
-          backgroundColor: theme.colors.white,
+        backgroundColor: '#ffffff',
         },
-        headerTintColor: theme.colors.primary,
         headerTitleStyle: {
-          fontWeight: 'bold',
+          color: '#172554',
+          fontWeight: '800',
         },
-        drawerActiveTintColor: theme.colors.primary,
-        drawerInactiveTintColor: theme.colors.textSecondary,
+        headerTintColor: '#526cf5',
+        headerShadowVisible: false,
+        drawerActiveTintColor: '#526cf5',
+        drawerInactiveTintColor: '#71809d',
       }}
     >
       <Drawer.Screen
@@ -89,7 +91,7 @@ function AppNavigator() {
 
   if (loading) {
     return (
-      <View style={tw`flex-1 items-center justify-center bg-[#f9fafb]`}>
+      <View style={tw`flex-1 items-center justify-center bg-[#f5f8ff]`}>
         <ActivityIndicator size="large" color={theme.colors.primary} />
       </View>
     );
@@ -98,9 +100,11 @@ function AppNavigator() {
   return (
     <NavigationContainer>
       <Stack.Navigator screenOptions={{
-        headerStyle: { backgroundColor: theme.colors.white },
-        headerTintColor: theme.colors.primary,
-        headerTitleStyle: { fontWeight: 'bold' }
+        contentStyle: { backgroundColor: '#f5f8ff' },
+        headerStyle: { backgroundColor: '#ffffff' },
+        headerTintColor: '#526cf5',
+        headerTitleStyle: { color: '#172554', fontWeight: '800' },
+        headerShadowVisible: false,
       }}>
         {user ? (
           <>

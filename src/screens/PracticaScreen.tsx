@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, TextInput, TouchableOpacity, KeyboardAvoidingView, Platform, ScrollView } from 'react-native';
+import { View, Text, TextInput, TouchableOpacity, KeyboardAvoidingView, Platform, ScrollView, useWindowDimensions } from 'react-native';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { RootStackParamList } from '../navigation/types';
 import { PracticaEngine, Question } from '../utils/PracticaEngine';
@@ -12,6 +12,8 @@ const TOTAL_QUESTIONS = 10;
 
 export default function PracticaScreen({ navigation, route }: Props) {
     const { mode, tables } = route.params;
+    const { width } = useWindowDimensions();
+    const isWide = width >= 760;
     const [engine] = useState(() => new PracticaEngine());
     const [questions, setQuestions] = useState<Question[]>([]);
     const [currentQuestion, setCurrentQuestion] = useState<Question | null>(null);
@@ -83,104 +85,125 @@ export default function PracticaScreen({ navigation, route }: Props) {
             keyboardVerticalOffset={Platform.OS === 'ios' ? 100 : 0}
         >
             <ScrollView contentContainerStyle={styles.scrollContent} showsVerticalScrollIndicator={false}>
-                <View style={styles.topSection}>
-                    <View style={styles.progressHeader}>
-                        <Text style={styles.counterText}>Pregunta {questionCount} de {TOTAL_QUESTIONS}</Text>
-                        <Text style={styles.scoreText}>Aciertos: {score}</Text>
+                <View style={styles.page}>
+                    <View style={styles.topSection}>
+                        <View style={styles.progressHeader}>
+                            <View>
+                                <Text style={styles.eyebrow}>⚡ ¡Misión en marcha!</Text>
+                                <Text style={styles.counterText}>Pregunta {questionCount} de {TOTAL_QUESTIONS}</Text>
+                            </View>
+                            <View style={styles.scorePill}>
+                                <Text style={styles.scoreText}>⭐ {score} {score === 1 ? 'acierto' : 'aciertos'}</Text>
+                            </View>
+                        </View>
+                        <View style={styles.progressBarBg}>
+                            <View style={[styles.progressBarFill, { width: `${progress * 100}%` }]} />
+                        </View>
                     </View>
-                    <View style={styles.progressBarBg}>
-                        <View style={[styles.progressBarFill, { width: `${progress * 100}%` }]} />
-                    </View>
-                </View>
 
-                <View style={styles.card}>
-                    <Text style={styles.promptLabel}>¿Cuánto es?</Text>
-                    <Text style={styles.promptText}>
-                        {currentQuestion.prompt}
-                    </Text>
-
-                    <View style={styles.divider} />
-
-                    {mode === 'typed' ? (
-                        <View style={styles.typedContainer}>
-                            <TextInput
-                                style={[
-                                    styles.input,
-                                    status === 'correct' && styles.inputCorrect,
-                                    status === 'incorrect' && styles.inputIncorrect
-                                ]}
-                                value={userAnswer}
-                                onChangeText={setUserAnswer}
-                                placeholder="Escribe el resultado..."
-                                keyboardType="number-pad"
-                                autoFocus={true}
-                                editable={status === 'answering'}
-                                onSubmitEditing={() => submitAnswer()}
-                            />
+                    <View style={[styles.card, isWide && styles.cardWide]}>
+                        <View style={styles.questionHeader}>
+                            <Text style={styles.promptLabel}>RESUELVE EL RETO</Text>
+                            <Text style={styles.mathIcon}>✖️</Text>
                         </View>
-                    ) : (
-                        <View style={styles.optionsContainer}>
-                            {options.map((opt, index) => {
-                                const buttonStyles: any[] = [styles.optionButton];
-                                let textStyle: any = styles.optionText;
+                        <Text style={[styles.promptText, isWide && styles.promptTextWide]}>
+                            {currentQuestion.prompt}
+                        </Text>
 
-                                if (status !== 'answering') {
-                                    const isSelected = opt.toString() === userAnswer || opt === (typeof userAnswer === 'number' ? userAnswer : parseInt(userAnswer, 10));
-                                    const isActuallyCorrect = opt === currentQuestion.correctAnswer;
+                        <View style={styles.divider} />
 
-                                    if (isActuallyCorrect) {
-                                        buttonStyles.push(styles.optionButtonCorrect);
-                                        textStyle = [textStyle, { color: theme.colors.white }];
-                                    } else if (isSelected) {
-                                        buttonStyles.push(styles.optionButtonIncorrect);
-                                        textStyle = [textStyle, { color: theme.colors.white }];
-                                    }
-                                }
-
-                                return (
-                                    <TouchableOpacity
-                                        key={index}
-                                        style={buttonStyles}
-                                        onPress={() => {
-                                            setUserAnswer(opt.toString());
-                                            submitAnswer(opt);
-                                        }}
-                                        disabled={status !== 'answering'}
-                                    >
-                                        <Text style={textStyle}>{opt}</Text>
-                                    </TouchableOpacity>
-                                );
-                            })}
-                        </View>
-                    )}
-
-                    {status !== 'answering' && (
-                        <View style={[
-                            styles.feedbackBox,
-                            status === 'correct' ? styles.feedbackBoxCorrect : styles.feedbackBoxIncorrect
-                        ]}>
-                            <Text style={styles.feedbackText}>{feedback}</Text>
-                        </View>
-                    )}
-
-                    <View style={styles.actionContainer}>
-                        {status === 'answering' ? (
-                            mode === 'typed' && (
-                                <TouchableOpacity
-                                    style={[styles.mainButton, !userAnswer.trim() && styles.buttonDisabled]}
-                                    onPress={() => submitAnswer()}
-                                    disabled={!userAnswer.trim()}
-                                >
-                                    <Text style={styles.buttonText}>Comprobar</Text>
-                                </TouchableOpacity>
-                            )
+                        {mode === 'typed' ? (
+                            <View style={styles.typedContainer}>
+                                <Text style={styles.inputHint}>Escribe el resultado aquí</Text>
+                                <TextInput
+                                    style={[
+                                        styles.input,
+                                        status === 'correct' && styles.inputCorrect,
+                                        status === 'incorrect' && styles.inputIncorrect
+                                    ]}
+                                    value={userAnswer}
+                                    onChangeText={setUserAnswer}
+                                    placeholder="Tu respuesta"
+                                    keyboardType="number-pad"
+                                    autoFocus={true}
+                                    editable={status === 'answering'}
+                                    onSubmitEditing={() => submitAnswer()}
+                                />
+                            </View>
                         ) : (
-                            <TouchableOpacity style={[styles.mainButton, { backgroundColor: theme.colors.secondary }]} onPress={handleNext}>
-                                <Text style={styles.buttonText}>
-                                    {questionCount >= TOTAL_QUESTIONS ? 'Ver Resultados' : 'Siguiente'}
-                                </Text>
-                            </TouchableOpacity>
+                            <View style={styles.optionsContainer}>
+                                {options.map((opt, index) => {
+                                    const buttonStyles: any[] = [styles.optionButton];
+                                    let textStyle: any = styles.optionText;
+
+                                    if (status !== 'answering') {
+                                        const isSelected = opt.toString() === userAnswer || opt === (typeof userAnswer === 'number' ? userAnswer : parseInt(userAnswer, 10));
+                                        const isActuallyCorrect = opt === currentQuestion.correctAnswer;
+
+                                        if (isActuallyCorrect) {
+                                            buttonStyles.push(styles.optionButtonCorrect);
+                                            textStyle = [textStyle, styles.optionTextOnColor];
+                                        } else if (isSelected) {
+                                            buttonStyles.push(styles.optionButtonIncorrect);
+                                            textStyle = [textStyle, styles.optionTextOnColor];
+                                        }
+                                    }
+
+                                    return (
+                                        <TouchableOpacity
+                                            key={index}
+                                            accessibilityRole="button"
+                                            style={buttonStyles}
+                                            onPress={() => {
+                                                setUserAnswer(opt.toString());
+                                                submitAnswer(opt);
+                                            }}
+                                            disabled={status !== 'answering'}
+                                            activeOpacity={0.78}
+                                        >
+                                            <Text style={styles.optionEmoji}>{['🌟', '🚀', '🪄', '🦄'][index % 4]}</Text>
+                                            <Text style={textStyle}>{opt}</Text>
+                                        </TouchableOpacity>
+                                    );
+                                })}
+                            </View>
                         )}
+
+                        {status !== 'answering' && (
+                            <View style={[
+                                styles.feedbackBox,
+                                status === 'correct' ? styles.feedbackBoxCorrect : styles.feedbackBoxIncorrect
+                            ]}>
+                                <Text style={styles.feedbackEmoji}>{status === 'correct' ? '🎉' : '💪'}</Text>
+                                <Text style={styles.feedbackText}>{feedback}</Text>
+                            </View>
+                        )}
+
+                        <View style={styles.actionContainer}>
+                            {status === 'answering' ? (
+                                mode === 'typed' && (
+                                    <TouchableOpacity
+                                        style={[styles.mainButton, !userAnswer.trim() && styles.buttonDisabled]}
+                                        onPress={() => submitAnswer()}
+                                        disabled={!userAnswer.trim()}
+                                        activeOpacity={0.82}
+                                    >
+                                        <Text style={styles.buttonText}>Comprobar respuesta</Text>
+                                    </TouchableOpacity>
+                                )
+                            ) : (
+                                <TouchableOpacity
+                                    style={[styles.mainButton, styles.nextButton]}
+                                    onPress={handleNext}
+                                    activeOpacity={0.82}
+                                >
+                                    <Text style={styles.buttonText}>
+                                        {questionCount >= TOTAL_QUESTIONS ? 'Ver mis resultados' : 'Siguiente reto'}
+                                    </Text>
+                                    <Text style={styles.buttonArrow}>→</Text>
+                                </TouchableOpacity>
+                            )}
+                        </View>
                     </View>
                 </View>
             </ScrollView>
@@ -189,33 +212,46 @@ export default function PracticaScreen({ navigation, route }: Props) {
 }
 
 const styles = {
-    container: tw`flex-1 bg-[#f9fafb]`,
-    scrollContent: tw`p-6 pb-16`,
-    topSection: tw`mb-6`,
-    progressHeader: tw`mb-2 flex-row justify-between`,
-    counterText: tw`text-sm text-[#4b5563]`,
-    scoreText: tw`text-sm font-bold text-[#4f46e5]`,
-    progressBarBg: tw`h-2 overflow-hidden rounded bg-[#e5e7eb]`,
-    progressBarFill: tw`h-full bg-[#4f46e5]`,
-    card: tw`rounded-2xl bg-white p-8 shadow-md`,
-    promptLabel: tw`text-center text-sm uppercase tracking-widest text-[#9ca3af]`,
-    promptText: tw`my-4 text-center text-[48px] font-extrabold text-[#111827]`,
-    divider: tw`mb-6 h-px bg-[#e5e7eb]`,
-    typedContainer: tw`mb-6`,
-    input: tw`rounded-xl border-2 border-[#e5e7eb] bg-[#f9fafb] p-4 text-center text-2xl text-[#111827]`,
-    inputCorrect: tw`border-[#10b981] bg-[#ecfdf5]`,
-    inputIncorrect: tw`border-[#ef4444] bg-[#fef2f2]`,
-    optionsContainer: tw`mb-6 flex-row flex-wrap justify-between gap-4`,
-    optionButton: tw`w-[45%] items-center rounded-xl border border-[#e5e7eb] bg-white p-6 shadow-sm`,
-    optionButtonCorrect: tw`border-[#10b981] bg-[#10b981]`,
-    optionButtonIncorrect: tw`border-[#ef4444] bg-[#ef4444]`,
-    optionText: tw`text-2xl font-bold text-[#111827]`,
-    feedbackBox: tw`mb-6 items-center rounded-xl p-4`,
-    feedbackBoxCorrect: tw`bg-[#ecfdf5]`,
-    feedbackBoxIncorrect: tw`bg-[#fef2f2]`,
-    feedbackText: tw`text-center text-base font-bold text-[#111827]`,
+    container: tw`flex-1 bg-[#f5f8ff]`,
+    scrollContent: tw`px-4 pb-10 pt-5`,
+    page: [tw`w-full self-center`, { maxWidth: 880 }],
+    topSection: tw`mb-5`,
+    progressHeader: tw`mb-3 flex-row items-center justify-between`,
+    eyebrow: tw`mb-1 text-sm font-bold text-[#7046d8]`,
+    counterText: tw`text-base font-extrabold text-[#172554]`,
+    scorePill: tw`rounded-full bg-[#fff1c2] px-4 py-2`,
+    scoreText: tw`text-sm font-extrabold text-[#815c00]`,
+    progressBarBg: tw`h-3 overflow-hidden rounded-full bg-[#e4eaf5]`,
+    progressBarFill: tw`h-full rounded-full bg-[#52c79a]`,
+    card: tw`rounded-3xl border border-[#e7ecf6] bg-white p-5 shadow-sm`,
+    cardWide: tw`p-8`,
+    questionHeader: tw`flex-row items-center justify-between`,
+    promptLabel: tw`text-xs font-extrabold tracking-widest text-[#73809a]`,
+    mathIcon: tw`text-xl`,
+    promptText: tw`my-4 text-center text-[42px] font-black text-[#172554]`,
+    promptTextWide: tw`my-5 text-[56px]`,
+    divider: tw`mb-5 h-px bg-[#edf0f7]`,
+    typedContainer: tw`mb-5`,
+    inputHint: tw`mb-3 text-center text-sm font-semibold text-[#73809a]`,
+    input: tw`min-h-[64px] rounded-2xl border-2 border-[#dce4f2] bg-[#f8faff] p-4 text-center text-3xl font-bold text-[#172554]`,
+    inputCorrect: tw`border-[#35b989] bg-[#effbf6]`,
+    inputIncorrect: tw`border-[#ee7480] bg-[#fff2f3]`,
+    optionsContainer: tw`mb-5 flex-row flex-wrap justify-between gap-3`,
+    optionButton: tw`min-h-[88px] w-[48%] flex-row items-center justify-center rounded-2xl border-2 border-[#e7ecf6] bg-[#fbfcff] p-4`,
+    optionButtonCorrect: tw`border-[#35b989] bg-[#35b989]`,
+    optionButtonIncorrect: tw`border-[#ee7480] bg-[#ee7480]`,
+    optionEmoji: tw`mr-2 text-xl`,
+    optionText: tw`text-2xl font-black text-[#25365d]`,
+    optionTextOnColor: tw`text-white`,
+    feedbackBox: tw`mb-5 flex-row items-center justify-center rounded-2xl p-4`,
+    feedbackBoxCorrect: tw`bg-[#eaf9f2]`,
+    feedbackBoxIncorrect: tw`bg-[#fff1e8]`,
+    feedbackEmoji: tw`mr-2 text-2xl`,
+    feedbackText: tw`text-center text-base font-extrabold text-[#25365d]`,
     actionContainer: tw`mt-1`,
-    mainButton: tw`items-center rounded-xl bg-[#4f46e5] p-4 shadow-sm`,
-    buttonDisabled: tw`bg-[#9ca3af] opacity-50`,
-    buttonText: tw`text-lg font-bold text-white`,
+    mainButton: tw`min-h-[58px] flex-row items-center justify-center rounded-2xl bg-[#168f68] p-4 shadow-sm`,
+    nextButton: tw`bg-[#7154d9]`,
+    buttonDisabled: tw`bg-[#aeb8cc] opacity-60`,
+    buttonText: tw`text-base font-black text-white`,
+    buttonArrow: tw`ml-3 text-xl font-bold text-white`,
 };

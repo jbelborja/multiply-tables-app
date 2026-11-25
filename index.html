@@ -5,14 +5,24 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>MultiTable Hero</title>
     <style>
+      * {
+        box-sizing: border-box;
+      }
+      html {
+        min-height: 100%;
+        background: #f5f8ff;
+      }
       #root {
         display: flex;
-        flex: 1;
-        height: 100vh;
+        min-height: 100vh;
       }
       body {
         margin: 0;
-        overflow: hidden;
+        min-width: 320px;
+        min-height: 100vh;
+        overflow-x: hidden;
+        font-family: Inter, ui-rounded, "Avenir Next", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+        -webkit-font-smoothing: antialiased;
       }
     </style>
   </head>

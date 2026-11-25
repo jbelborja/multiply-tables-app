@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Text, TouchableOpacity, ScrollView } from 'react-native';
+import { View, Text, TouchableOpacity, ScrollView, useWindowDimensions } from 'react-native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { RootStackParamList } from '../navigation/types';
 import tw from 'twrnc';
@@ -13,6 +13,8 @@ type Props = {
 export default function HomeScreen({ navigation }: Props) {
     const [selectedTables, setSelectedTables] = useState<number[]>([1]);
     const [mode, setMode] = useState<'choice' | 'typed'>('choice');
+    const { width } = useWindowDimensions();
+    const isWide = width >= 820;
 
     const toggleTable = (num: number) => {
         if (selectedTables.includes(num)) {
@@ -30,88 +32,147 @@ export default function HomeScreen({ navigation }: Props) {
 
     return (
         <ScrollView style={styles.container} contentContainerStyle={styles.scrollContent}>
-            <View style={styles.header}>
-                <Text style={styles.title}>MultiTable Hero</Text>
-                <Text style={styles.subtitle}>Selecciona las tablas que quieres practicar</Text>
-            </View>
+            <View style={styles.page}>
+                <View style={styles.hero}>
+                    <View style={styles.heroCopy}>
+                        <Text style={styles.eyebrow}>🚀 ¡Tu próxima misión!</Text>
+                        <Text style={styles.title}>¡A por las tablas!</Text>
+                        <Text style={styles.subtitle}>Elige tus tablas y prepárate para convertirte en una estrella de las mates.</Text>
+                    </View>
+                    <View style={styles.heroArt}>
+                        <Text style={styles.heroEmoji}>🦸‍♀️</Text>
+                        <Text style={styles.heroSparkle}>✨</Text>
+                    </View>
+                </View>
 
-            <View style={styles.grid}>
-                {[1, 2, 3, 4, 5, 6, 7, 8, 9].map((num) => (
-                    <TouchableOpacity
-                        key={num}
-                        style={[
-                            styles.tableButton,
-                            selectedTables.includes(num) && styles.tableButtonSelected
-                        ]}
-                        onPress={() => toggleTable(num)}
-                    >
-                        <Text style={[
-                            styles.tableButtonText,
-                            selectedTables.includes(num) && styles.tableButtonTextSelected
-                        ]}>
-                            {num}
-                        </Text>
-                    </TouchableOpacity>
-                ))}
-            </View>
+                <View style={[styles.setup, isWide && styles.setupWide]}>
+                    <View style={[styles.sectionCard, isWide && styles.sectionCardWide]}>
+                        <View style={styles.sectionHeading}>
+                            <View style={styles.stepBadge}><Text style={styles.stepText}>1</Text></View>
+                            <View>
+                                <Text style={styles.sectionTitle}>Elige tus tablas</Text>
+                                <Text style={styles.sectionHint}>Puedes elegir más de una</Text>
+                            </View>
+                        </View>
+                        <View style={styles.grid}>
+                            {[1, 2, 3, 4, 5, 6, 7, 8, 9].map((num) => {
+                                const selected = selectedTables.includes(num);
+                                return (
+                                    <TouchableOpacity
+                                        key={num}
+                                        accessibilityRole="button"
+                                        accessibilityState={{ selected }}
+                                        style={[styles.tableButton, selected && styles.tableButtonSelected]}
+                                        onPress={() => toggleTable(num)}
+                                        activeOpacity={0.78}
+                                    >
+                                        <Text style={[styles.tableButtonText, selected && styles.tableButtonTextSelected]}>
+                                            {num}
+                                        </Text>
+                                    </TouchableOpacity>
+                                );
+                            })}
+                        </View>
+                        <Text style={styles.selectionNote}>⭐ {selectedTables.length} {selectedTables.length === 1 ? 'tabla elegida' : 'tablas elegidas'}</Text>
+                    </View>
 
-            <View style={styles.sectionHeader}>
-                <Text style={styles.sectionTitle}>Modo de Juego</Text>
-            </View>
+                    <View style={styles.rightColumn}>
+                        <View style={styles.sectionCard}>
+                            <View style={styles.sectionHeading}>
+                                <View style={[styles.stepBadge, styles.stepBadgePurple]}><Text style={styles.stepText}>2</Text></View>
+                                <View>
+                                    <Text style={styles.sectionTitle}>¿Cómo quieres jugar?</Text>
+                                    <Text style={styles.sectionHint}>Escoge tu reto favorito</Text>
+                                </View>
+                            </View>
+                            <View style={styles.modeContainer}>
+                                <TouchableOpacity
+                                    accessibilityRole="button"
+                                    accessibilityState={{ selected: mode === 'choice' }}
+                                    style={[styles.modeButton, mode === 'choice' && styles.modeButtonActive]}
+                                    onPress={() => setMode('choice')}
+                                    activeOpacity={0.8}
+                                >
+                                    <Text style={styles.modeIcon}>🎯</Text>
+                                    <Text style={[styles.modeText, mode === 'choice' && styles.modeTextActive]}>Elegir respuesta</Text>
+                                    <Text style={styles.modeHint}>¡Acierta entre varias!</Text>
+                                </TouchableOpacity>
 
-            <View style={styles.modeContainer}>
-                <TouchableOpacity
-                    style={[styles.modeButton, mode === 'choice' && styles.modeButtonActive]}
-                    onPress={() => setMode('choice')}
-                >
-                    <Text style={styles.modeIcon}>🎯</Text>
-                    <Text style={[styles.modeText, mode === 'choice' && styles.modeTextActive]}>Elegir</Text>
+                                <TouchableOpacity
+                                    accessibilityRole="button"
+                                    accessibilityState={{ selected: mode === 'typed' }}
+                                    style={[styles.modeButton, mode === 'typed' && styles.modeButtonActive]}
+                                    onPress={() => setMode('typed')}
+                                    activeOpacity={0.8}
+                                >
+                                    <Text style={styles.modeIcon}>✍️</Text>
+                                    <Text style={[styles.modeText, mode === 'typed' && styles.modeTextActive]}>Escribir respuesta</Text>
+                                    <Text style={styles.modeHint}>¡Tú sabes el resultado!</Text>
+                                </TouchableOpacity>
+                            </View>
+                        </View>
+
+                        <View style={styles.tipCard}>
+                            <Text style={styles.tipIcon}>💡</Text>
+                            <View style={styles.tipCopy}>
+                                <Text style={styles.tipTitle}>Truco de héroe</Text>
+                                <Text style={styles.tipText}>Practica las tablas en distinto orden para que se queden en tu memoria.</Text>
+                            </View>
+                        </View>
+                    </View>
+                </View>
+
+                <TouchableOpacity style={styles.startButton} onPress={handleStart} activeOpacity={0.82}>
+                    <Text style={styles.startButtonText}>¡Empezar misión!</Text>
+                    <Text style={styles.startArrow}>→</Text>
                 </TouchableOpacity>
-
-                <TouchableOpacity
-                    style={[styles.modeButton, mode === 'typed' && styles.modeButtonActive]}
-                    onPress={() => setMode('typed')}
-                >
-                    <Text style={styles.modeIcon}>✍️</Text>
-                    <Text style={[styles.modeText, mode === 'typed' && styles.modeTextActive]}>Escribir</Text>
-                </TouchableOpacity>
-            </View>
-
-            <TouchableOpacity
-                style={styles.startButton}
-                onPress={handleStart}
-            >
-                <Text style={styles.startButtonText}>¡Comenzar Práctica!</Text>
-            </TouchableOpacity>
-
-            <View style={styles.infoCard}>
-                <Text style={styles.infoText}>💡 Tip: Practica salteado para mejorar tu memoria muscular.</Text>
             </View>
         </ScrollView>
     );
 }
 
 const styles = {
-    container: tw`flex-1 bg-[#f9fafb]`,
-    scrollContent: tw`p-6`,
-    header: tw`mt-8 mb-8`,
-    title: tw`mb-1 text-[32px] font-extrabold text-[#111827]`,
-    subtitle: tw`text-base text-[#4b5563]`,
-    grid: tw`mb-8 flex-row flex-wrap justify-between gap-4`,
-    tableButton: tw`aspect-square w-[30%] items-center justify-center rounded-xl border-2 border-transparent bg-white shadow-sm`,
-    tableButtonSelected: tw`border-[#4338ca] bg-[#4f46e5]`,
-    tableButtonText: tw`text-2xl font-bold text-[#4f46e5]`,
+    container: tw`flex-1 bg-[#f5f8ff]`,
+    scrollContent: tw`px-4 pb-8 pt-5`,
+    page: [tw`w-full self-center`, { maxWidth: 1120 }],
+    hero: tw`mb-6 flex-row items-center justify-between overflow-hidden rounded-[28px] bg-[#e7f1ff] px-5 py-6`,
+    heroCopy: tw`flex-1`,
+    eyebrow: tw`mb-2 text-sm font-bold text-[#315b9a]`,
+    title: tw`mb-2 text-[32px] font-black text-[#172554]`,
+    subtitle: tw`max-w-[520px] text-base leading-6 text-[#465779]`,
+    heroArt: tw`ml-2 h-[100px] w-[100px] items-center justify-center rounded-full bg-[#d5e7ff]`,
+    heroEmoji: tw`text-[58px]`,
+    heroSparkle: [tw`absolute right-2 top-1 text-2xl`, { right: 4, top: 0 }],
+    setup: tw`gap-5`,
+    setupWide: tw`flex-row items-start`,
+    sectionCard: tw`mb-5 rounded-3xl border border-[#e7ecf6] bg-white p-5 shadow-sm`,
+    sectionCardWide: tw`flex-1`,
+    sectionHeading: tw`mb-5 flex-row items-center`,
+    stepBadge: tw`mr-3 h-10 w-10 items-center justify-center rounded-full bg-[#dff8ef]`,
+    stepBadgePurple: tw`bg-[#eee7ff]`,
+    stepText: tw`text-lg font-black text-[#16835e]`,
+    sectionTitle: tw`text-lg font-extrabold text-[#172554]`,
+    sectionHint: tw`mt-0.5 text-sm text-[#73809a]`,
+    grid: tw`flex-row flex-wrap justify-between gap-3`,
+    tableButton: tw`aspect-square w-[30%] items-center justify-center rounded-2xl border-2 border-[#e7ecf6] bg-[#f8faff]`,
+    tableButtonSelected: tw`border-[#4f6df5] bg-[#4f6df5] shadow-md`,
+    tableButtonText: tw`text-2xl font-black text-[#52658c]`,
     tableButtonTextSelected: tw`text-white`,
-    sectionHeader: tw`mb-4`,
-    sectionTitle: tw`text-lg font-semibold text-[#111827]`,
-    modeContainer: tw`mb-8 flex-row gap-4`,
-    modeButton: tw`flex-1 items-center rounded-xl border-2 border-transparent bg-white p-4 shadow-sm`,
-    modeButtonActive: tw`border-[#7c3aed] bg-[#f5f3ff]`,
-    modeIcon: tw`mb-1 text-2xl`,
-    modeText: tw`text-sm font-bold text-[#4b5563]`,
-    modeTextActive: tw`text-[#7c3aed]`,
-    startButton: tw`mb-8 items-center rounded-2xl bg-[#10b981] p-4 shadow-md`,
-    startButtonText: tw`text-xl font-bold text-white`,
-    infoCard: tw`mb-8 rounded-xl border-l-4 border-[#4f46e5] bg-white p-4 shadow-sm`,
-    infoText: tw`text-sm text-[#4b5563]`,
+    selectionNote: tw`mt-4 text-sm font-bold text-[#52658c]`,
+    rightColumn: tw`flex-1`,
+    modeContainer: tw`gap-3`,
+    modeButton: tw`mb-1 flex-row flex-wrap items-center rounded-2xl border-2 border-[#e7ecf6] bg-[#fbfcff] p-4`,
+    modeButtonActive: tw`border-[#8b6cf6] bg-[#f5f1ff]`,
+    modeIcon: tw`mr-3 text-3xl`,
+    modeText: tw`text-base font-extrabold text-[#465779]`,
+    modeTextActive: tw`text-[#7046d8]`,
+    modeHint: tw`ml-12 mt-1 w-full text-sm text-[#73809a]`,
+    tipCard: tw`mb-5 flex-row items-start rounded-2xl bg-[#fff6da] p-4`,
+    tipIcon: tw`mr-3 text-2xl`,
+    tipCopy: tw`flex-1`,
+    tipTitle: tw`mb-1 text-sm font-extrabold text-[#815c00]`,
+    tipText: tw`text-sm leading-5 text-[#78653a]`,
+    startButton: tw`mt-1 min-h-[58px] flex-row items-center justify-center rounded-2xl bg-[#19a879] px-5 py-4 shadow-md`,
+    startButtonText: tw`text-lg font-black text-white`,
+    startArrow: tw`ml-3 text-2xl font-bold text-white`,
 };
