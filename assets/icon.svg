@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1024" height="1024" viewBox="0 0 1024 1024">
+  <defs>
+    <linearGradient id="background" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#6482ff"/>
+      <stop offset="1" stop-color="#405be5"/>
+    </linearGradient>
+    <linearGradient id="multiply" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#ffd94f"/>
+      <stop offset="1" stop-color="#ffb92e"/>
+    </linearGradient>
+  </defs>
+  <rect width="1024" height="1024" fill="url(#background)"/>
+  <circle cx="850" cy="170" r="52" fill="#ffffff" opacity=".18"/>
+  <circle cx="170" cy="830" r="34" fill="#ffffff" opacity=".16"/>
+  <rect x="110" y="146" width="804" height="732" rx="190" fill="#ffffff"/>
+  <text x="310" y="565" fill="#172554" font-family="Arial, sans-serif" font-size="300" font-weight="800" text-anchor="middle">2</text>
+  <text x="512" y="560" fill="url(#multiply)" font-family="Arial, sans-serif" font-size="310" font-weight="800" text-anchor="middle">×</text>
+  <text x="714" y="565" fill="#172554" font-family="Arial, sans-serif" font-size="300" font-weight="800" text-anchor="middle">3</text>
+  <circle cx="512" cy="784" r="74" fill="#19a879"/>
+  <text x="512" y="814" fill="#ffffff" font-family="Arial, sans-serif" font-size="90" font-weight="800" text-anchor="middle">6</text>
+</svg>

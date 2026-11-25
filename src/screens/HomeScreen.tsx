@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
-import { View, Text, TouchableOpacity, ScrollView, useWindowDimensions } from 'react-native';
+import { View, Text, Image, TouchableOpacity, ScrollView, useWindowDimensions } from 'react-native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
+import heroIcon from '../../assets/icon.png';
 import { RootStackParamList } from '../navigation/types';
 import { useSession } from '../context/SessionContext';
 import tw from 'twrnc';
@@ -47,8 +48,11 @@ export default function HomeScreen({ navigation }: Props) {
                         <Text style={styles.subtitle}>Elige tus tablas y prepárate para convertirte en una estrella de las mates.</Text>
                     </View>
                     <View style={styles.heroArt}>
-                        <Text style={styles.heroEmoji}>🦸‍♀️</Text>
-                        <Text style={styles.heroSparkle}>✨</Text>
+                        <Image
+                            source={{ uri: heroIcon }}
+                            style={styles.heroIcon}
+                            accessibilityLabel="Icono de MultiTable Hero"
+                        />
                     </View>
                 </View>
 
@@ -161,8 +165,7 @@ const styles = {
     title: tw`mb-2 text-[32px] font-black text-[#172554]`,
     subtitle: tw`max-w-[520px] text-base leading-6 text-[#465779]`,
     heroArt: tw`ml-2 h-[100px] w-[100px] items-center justify-center rounded-full bg-[#d5e7ff]`,
-    heroEmoji: tw`text-[58px]`,
-    heroSparkle: [tw`absolute right-2 top-1 text-2xl`, { right: 4, top: 0 }],
+    heroIcon: tw`h-[76px] w-[76px] rounded-2xl`,
     setup: tw`gap-5`,
     setupWide: tw`flex-row items-start`,
     sectionCard: tw`mb-5 rounded-3xl border border-[#e7ecf6] bg-white p-5 shadow-sm`,

@@ -184,7 +184,6 @@ export default function PracticaScreen({ navigation, route }: Props) {
                                             disabled={status !== 'answering'}
                                             activeOpacity={0.78}
                                         >
-                                            <Text style={styles.optionEmoji}>{['🌟', '🚀', '🪄', '🦄'][index % 4]}</Text>
                                             <Text style={textStyle}>{opt}</Text>
                                         </TouchableOpacity>
                                     );
@@ -263,7 +262,6 @@ const styles = {
     optionButton: tw`min-h-[88px] w-[48%] flex-row items-center justify-center rounded-2xl border-2 border-[#e7ecf6] bg-[#fbfcff] p-4`,
     optionButtonCorrect: tw`border-[#35b989] bg-[#35b989]`,
     optionButtonIncorrect: tw`border-[#ee7480] bg-[#ee7480]`,
-    optionEmoji: tw`mr-2 text-xl`,
     optionText: tw`text-2xl font-black text-[#25365d]`,
     optionTextOnColor: tw`text-white`,
     feedbackBox: tw`mb-5 flex-row items-center justify-center rounded-2xl p-4`,
