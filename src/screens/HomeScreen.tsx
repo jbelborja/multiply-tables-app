@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { View, Text, TouchableOpacity, ScrollView, useWindowDimensions } from 'react-native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { RootStackParamList } from '../navigation/types';
+import { useSession } from '../context/SessionContext';
 import tw from 'twrnc';
 
 type HomeScreenNavigationProp = NativeStackNavigationProp<RootStackParamList, 'Home'>;
@@ -13,6 +14,7 @@ type Props = {
 export default function HomeScreen({ navigation }: Props) {
     const [selectedTables, setSelectedTables] = useState<number[]>([1]);
     const [mode, setMode] = useState<'choice' | 'typed'>('choice');
+    const { recentMistakes } = useSession();
     const { width } = useWindowDimensions();
     const isWide = width >= 820;
 
@@ -28,6 +30,11 @@ export default function HomeScreen({ navigation }: Props) {
 
     const handleStart = () => {
         navigation.navigate('Practica', { mode, tables: selectedTables });
+    };
+
+    const handleReviewMistakes = () => {
+        const tables = [...new Set(recentMistakes.map(mistake => mistake.a))].sort((a, b) => a - b);
+        navigation.navigate('Practica', { mode, tables, reviewMistakes: recentMistakes });
     };
 
     return (
@@ -126,6 +133,19 @@ export default function HomeScreen({ navigation }: Props) {
                     <Text style={styles.startButtonText}>¡Empezar misión!</Text>
                     <Text style={styles.startArrow}>→</Text>
                 </TouchableOpacity>
+
+                {recentMistakes.length > 0 && (
+                    <TouchableOpacity style={styles.reviewButton} onPress={handleReviewMistakes} activeOpacity={0.82}>
+                        <Text style={styles.reviewEmoji}>🧠</Text>
+                        <View style={styles.reviewCopy}>
+                            <Text style={styles.reviewTitle}>Entrenar mis retos difíciles</Text>
+                            <Text style={styles.reviewSubtitle}>
+                                Practica {recentMistakes.length} {recentMistakes.length === 1 ? 'operación que quieres dominar' : 'operaciones que quieres dominar'}.
+                            </Text>
+                        </View>
+                        <Text style={styles.reviewArrow}>→</Text>
+                    </TouchableOpacity>
+                )}
             </View>
         </ScrollView>
     );
@@ -175,4 +195,10 @@ const styles = {
     startButton: tw`mt-1 min-h-[58px] flex-row items-center justify-center rounded-2xl bg-[#19a879] px-5 py-4 shadow-md`,
     startButtonText: tw`text-lg font-black text-white`,
     startArrow: tw`ml-3 text-2xl font-bold text-white`,
+    reviewButton: tw`mt-3 flex-row items-center rounded-2xl border-2 border-[#d9cef9] bg-[#f5f1ff] p-4`,
+    reviewEmoji: tw`mr-3 text-3xl`,
+    reviewCopy: tw`flex-1`,
+    reviewTitle: tw`text-base font-extrabold text-[#5236a6]`,
+    reviewSubtitle: tw`mt-1 text-sm text-[#75659f]`,
+    reviewArrow: tw`ml-2 text-2xl font-bold text-[#7046d8]`,
 };

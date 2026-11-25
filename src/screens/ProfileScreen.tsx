@@ -29,7 +29,9 @@ export default function ProfileScreen() {
                 <View style={styles.historyDetails}>
                     <View style={styles.historyTitleRow}>
                         <Text style={styles.historyMode}>
-                            {item.mode === 'typed' ? '✍️ Escribir' : '🎯 Elegir'}
+                            {item.practiceType === 'errors'
+                                ? '🧠 Repaso de errores'
+                                : item.mode === 'typed' ? '✍️ Escribir' : '🎯 Elegir'}
                         </Text>
                         <Text style={styles.tableTag}>{item.tables.length === 1 ? `Tabla ${item.tables[0]}` : `${item.tables.length} tablas`}</Text>
                     </View>

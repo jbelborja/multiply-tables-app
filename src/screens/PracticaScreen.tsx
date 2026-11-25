@@ -2,16 +2,17 @@ import React, { useState, useEffect } from 'react';
 import { View, Text, TextInput, TouchableOpacity, KeyboardAvoidingView, Platform, ScrollView, useWindowDimensions } from 'react-native';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { RootStackParamList } from '../navigation/types';
-import { PracticaEngine, Question } from '../utils/PracticaEngine';
+import { PracticaEngine, PracticeMistake, Question } from '../utils/PracticaEngine';
 import { theme } from '../styles/theme';
 import tw from 'twrnc';
 
 type Props = NativeStackScreenProps<RootStackParamList, 'Practica'>;
 
-const TOTAL_QUESTIONS = 10;
+const STANDARD_QUESTION_COUNT = 10;
 
 export default function PracticaScreen({ navigation, route }: Props) {
-    const { mode, tables } = route.params;
+    const { mode, tables, reviewMistakes } = route.params;
+    const isReviewMode = Boolean(reviewMistakes?.length);
     const { width } = useWindowDimensions();
     const isWide = width >= 760;
     const [engine] = useState(() => new PracticaEngine());
@@ -22,12 +23,22 @@ export default function PracticaScreen({ navigation, route }: Props) {
     const [userAnswer, setUserAnswer] = useState('');
     const [questionCount, setQuestionCount] = useState(0);
     const [score, setScore] = useState(0);
+    const [mistakes, setMistakes] = useState<PracticeMistake[]>([]);
+    const [reviewedOperations, setReviewedOperations] = useState<string[]>([]);
     const [status, setStatus] = useState<'answering' | 'correct' | 'incorrect'>('answering');
     const [feedback, setFeedback] = useState('');
 
     const loadNextQuestion = (nextIndex: number, currentQuestions: Question[]) => {
-        if (nextIndex >= TOTAL_QUESTIONS || nextIndex >= currentQuestions.length) {
-            navigation.replace('Summary', { score, total: TOTAL_QUESTIONS, mode, tables });
+        if (nextIndex >= currentQuestions.length) {
+            navigation.replace('Summary', {
+                score,
+                total: currentQuestions.length,
+                mode,
+                tables,
+                mistakes,
+                reviewedOperations,
+                practiceType: isReviewMode ? 'errors' : 'standard',
+            });
             return;
         }
 
@@ -35,7 +46,7 @@ export default function PracticaScreen({ navigation, route }: Props) {
         setCurrentQuestion(q);
 
         if (mode === 'choice') {
-            setOptions(engine.generateOptions(q));
+            setOptions(engine.generateOptions(q, 4, tables));
             setUserAnswer('');
         } else {
             setUserAnswer('');
@@ -47,7 +58,9 @@ export default function PracticaScreen({ navigation, route }: Props) {
     };
 
     useEffect(() => {
-        const generated = engine.generateUniqueQuestions(tables, TOTAL_QUESTIONS);
+        const generated = isReviewMode && reviewMistakes
+            ? engine.generateQuestionsFromMistakes(reviewMistakes)
+            : engine.generateUniqueQuestions(tables, STANDARD_QUESTION_COUNT);
         setQuestions(generated);
         if (generated.length > 0) {
             loadNextQuestion(0, generated);
@@ -55,10 +68,13 @@ export default function PracticaScreen({ navigation, route }: Props) {
     }, []);
 
     const submitAnswer = (choiceAnswer?: number | string) => {
-        if (!currentQuestion) return;
+        if (!currentQuestion || status !== 'answering') return;
 
         const answerToUse = choiceAnswer !== undefined ? choiceAnswer : userAnswer;
         const isCorrect = engine.checkAnswer(currentQuestion, answerToUse);
+        if (isReviewMode) {
+            setReviewedOperations(prev => [...prev, `${currentQuestion.a}x${currentQuestion.b}`]);
+        }
 
         if (isCorrect) {
             setScore(prev => prev + 1);
@@ -67,6 +83,12 @@ export default function PracticaScreen({ navigation, route }: Props) {
         } else {
             setStatus('incorrect');
             setFeedback(`Vaya... La respuesta era: ${currentQuestion.correctAnswer}`);
+            setMistakes(prev => [...prev, {
+                a: currentQuestion.a,
+                b: currentQuestion.b,
+                answer: String(answerToUse),
+                correctAnswer: currentQuestion.correctAnswer,
+            }]);
         }
     };
 
@@ -76,7 +98,8 @@ export default function PracticaScreen({ navigation, route }: Props) {
 
     if (!currentQuestion) return null;
 
-    const progress = (questionCount / TOTAL_QUESTIONS);
+    const totalQuestions = questions.length;
+    const progress = questionCount / totalQuestions;
 
     return (
         <KeyboardAvoidingView
@@ -89,8 +112,8 @@ export default function PracticaScreen({ navigation, route }: Props) {
                     <View style={styles.topSection}>
                         <View style={styles.progressHeader}>
                             <View>
-                                <Text style={styles.eyebrow}>⚡ ¡Misión en marcha!</Text>
-                                <Text style={styles.counterText}>Pregunta {questionCount} de {TOTAL_QUESTIONS}</Text>
+                                <Text style={styles.eyebrow}>{isReviewMode ? '🧠 ¡Entrenamiento especial!' : '⚡ ¡Misión en marcha!'}</Text>
+                                <Text style={styles.counterText}>Pregunta {questionCount} de {totalQuestions}</Text>
                             </View>
                             <View style={styles.scorePill}>
                                 <Text style={styles.scoreText}>⭐ {score} {score === 1 ? 'acierto' : 'aciertos'}</Text>
@@ -198,7 +221,7 @@ export default function PracticaScreen({ navigation, route }: Props) {
                                     activeOpacity={0.82}
                                 >
                                     <Text style={styles.buttonText}>
-                                        {questionCount >= TOTAL_QUESTIONS ? 'Ver mis resultados' : 'Siguiente reto'}
+                                        {questionCount >= totalQuestions ? 'Ver mis resultados' : 'Siguiente reto'}
                                     </Text>
                                     <Text style={styles.buttonArrow}>→</Text>
                                 </TouchableOpacity>

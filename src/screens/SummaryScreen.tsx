@@ -9,7 +9,7 @@ import tw from 'twrnc';
 type Props = NativeStackScreenProps<RootStackParamList, 'Summary'>;
 
 export default function SummaryScreen({ route, navigation }: Props) {
-    const { score, total, mode, tables } = route.params;
+    const { score, total, mode, tables, mistakes, reviewedOperations, practiceType } = route.params;
     const { addResult, saveError } = useSession();
 
     useEffect(() => {
@@ -17,9 +17,12 @@ export default function SummaryScreen({ route, navigation }: Props) {
             score,
             total,
             mode,
-            tables
+            tables,
+            mistakes,
+            reviewedOperations,
+            practiceType,
         });
-    }, []);
+    }, [addResult, mode, mistakes, practiceType, reviewedOperations, score, tables, total]);
 
     const percentage = Math.round((score / total) * 100);
 
@@ -31,7 +34,7 @@ export default function SummaryScreen({ route, navigation }: Props) {
                         <Text style={styles.iconEmoji}>{percentage >= 80 ? '🎉' : percentage >= 50 ? '👏' : '✍️'}</Text>
                     </View>
 
-                    <Text style={styles.eyebrow}>MISIÓN COMPLETADA</Text>
+                    <Text style={styles.eyebrow}>{practiceType === 'errors' ? 'ENTRENAMIENTO ESPECIAL COMPLETADO' : 'MISIÓN COMPLETADA'}</Text>
                     <Text style={styles.title}>{score === total ? '¡Eres increíble!' : '¡Buen trabajo, héroe!'}</Text>
                     <Text style={styles.message}>
                         {score === total ? '¡Increíble! Dominas estas tablas.' :

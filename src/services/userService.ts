@@ -45,6 +45,9 @@ export const userService = {
                 total: data.total,
                 mode: data.mode,
                 tables: data.tables || [],
+                mistakes: data.mistakes || [],
+                reviewedOperations: data.reviewedOperations || [],
+                practiceType: data.practiceType || 'standard',
                 date: data.date instanceof Timestamp ? data.date.toDate() : new Date(data.date),
             } as PracticaResult;
         });

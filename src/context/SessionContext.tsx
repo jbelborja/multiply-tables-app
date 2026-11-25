@@ -1,6 +1,7 @@
-import React, { createContext, useContext, useState, ReactNode, useEffect } from 'react';
+import React, { createContext, useContext, useState, ReactNode, useEffect, useCallback } from 'react';
 import { useAuth } from './AuthContext';
 import { userService } from '../services/userService';
+import { PracticeMistake } from '../utils/PracticaEngine';
 
 export interface PracticaResult {
     id: string;
@@ -9,10 +10,14 @@ export interface PracticaResult {
     total: number;
     mode: 'typed' | 'choice';
     tables: number[];
+    mistakes?: PracticeMistake[];
+    reviewedOperations?: string[];
+    practiceType?: 'standard' | 'errors';
 }
 
 interface SessionContextType {
     history: PracticaResult[];
+    recentMistakes: PracticeMistake[];
     addResult: (result: Omit<PracticaResult, 'id' | 'date'>) => Promise<void>;
     clearSession: () => void;
     loadingHistory: boolean;
@@ -28,6 +33,23 @@ export const SessionProvider = ({ children }: { children: ReactNode }) => {
     const [loadingHistory, setLoadingHistory] = useState(false);
     const [historyError, setHistoryError] = useState<string | null>(null);
     const [saveError, setSaveError] = useState<string | null>(null);
+    const recentMistakes = history.reduce<{ mistakes: PracticeMistake[]; seen: Set<string> }>((recent, result) => {
+        const mistakesByOperation = new Map(
+            (result.mistakes ?? []).map(mistake => [`${mistake.a}x${mistake.b}`, mistake]),
+        );
+        const operations = result.practiceType === 'errors' && result.reviewedOperations
+            ? [...result.reviewedOperations].reverse()
+            : [...mistakesByOperation.keys()].reverse();
+
+        for (const operation of operations) {
+            if (recent.mistakes.length >= 10) return recent;
+            if (recent.seen.has(operation)) continue;
+            recent.seen.add(operation);
+            const mistake = mistakesByOperation.get(operation);
+            if (mistake) recent.mistakes.push(mistake);
+        }
+        return recent;
+    }, { mistakes: [], seen: new Set<string>() }).mistakes;
 
     useEffect(() => {
         let isCurrentUser = true;
@@ -60,7 +82,7 @@ export const SessionProvider = ({ children }: { children: ReactNode }) => {
         };
     }, [user]);
 
-    const addResult = async (result: Omit<PracticaResult, 'id' | 'date'>) => {
+    const addResult = useCallback(async (result: Omit<PracticaResult, 'id' | 'date'>) => {
         const newResult: PracticaResult = {
             ...result,
             id: Math.random().toString(36).substr(2, 9),
@@ -82,14 +104,14 @@ export const SessionProvider = ({ children }: { children: ReactNode }) => {
         } else {
             setSaveError('Inicia sesión con una cuenta para guardar tu historial.');
         }
-    };
+    }, [user]);
 
     const clearSession = () => {
         setHistory([]);
     };
 
     return (
-        <SessionContext.Provider value={{ history, addResult, clearSession, loadingHistory, historyError, saveError }}>
+        <SessionContext.Provider value={{ history, recentMistakes, addResult, clearSession, loadingHistory, historyError, saveError }}>
             {children}
         </SessionContext.Provider>
     );
